@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SERVSEEK</string>
+    <string name="developed_by_ruben_hakobyan">Developed by Ruben Hakobyan</string>
+    <string name="_1">1</string>
+    <string name="_3">3</string>
+    <string name="_2">2</string>
+    <string name="mobile">Mobile</string>
+    <string name="enter_mobile_number">Enter mobile number</string>
+    <string name="send_otp">Send otp</string>
+</resources>
