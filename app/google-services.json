@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1072046460829",
+    "project_id": "servseek-cdc9c",
+    "storage_bucket": "servseek-cdc9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072046460829:android:d496269d0fbd5eec9aa974",
+        "android_client_info": {
+          "package_name": "com.example.servseek"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn7monRyKcmiDRj73OV4YC805jCsiikWg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
