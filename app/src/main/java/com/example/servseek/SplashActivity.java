@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.servseek.utils.FirebaseUtil;
+
 public class SplashActivity extends AppCompatActivity {
 
     @Override
@@ -16,11 +18,15 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(FirebaseUtil.isLoggedIn()){
+                    startActivity(new Intent(SplashActivity.this,MainActivity.class));
 
-                    startActivity(new Intent(SplashActivity.this,LoginPhoneNumberActivity.class));
+                }else {
 
+                    startActivity(new Intent(SplashActivity.this, LoginPhoneNumberActivity.class));
+                }
                 finish();
             }
-        },2000);
+        },1000);
     }
 }
