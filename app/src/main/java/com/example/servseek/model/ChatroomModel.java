@@ -60,5 +60,4 @@ public class ChatroomModel {
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
     }
-
 }
