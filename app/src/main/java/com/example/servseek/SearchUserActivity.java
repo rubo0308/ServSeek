@@ -10,7 +10,7 @@ import android.widget.ImageButton;
 
 import com.example.servseek.adapter.SearchUserRecyclerAdapter;
 import com.example.servseek.utils.FirebaseUtil;
-import com.example.servseek.utils.model.UserModel;
+import com.example.servseek.model.UserModel;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 

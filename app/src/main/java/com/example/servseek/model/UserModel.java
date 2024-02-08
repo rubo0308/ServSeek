@@ -1,4 +1,4 @@
-package com.example.servseek.utils.model;
+package com.example.servseek.model;
 
 import com.google.firebase.Timestamp;
 

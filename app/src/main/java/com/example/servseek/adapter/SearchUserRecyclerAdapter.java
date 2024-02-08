@@ -17,7 +17,7 @@ import com.example.servseek.ChatActivity;
 import com.example.servseek.R;
 import com.example.servseek.utils.AndroidUtil;
 import com.example.servseek.utils.FirebaseUtil;
-import com.example.servseek.utils.model.UserModel;
+import com.example.servseek.model.UserModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 

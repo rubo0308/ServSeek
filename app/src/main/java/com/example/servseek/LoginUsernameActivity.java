@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.example.servseek.utils.FirebaseUtil;
-import com.example.servseek.utils.model.UserModel;
+import com.example.servseek.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;

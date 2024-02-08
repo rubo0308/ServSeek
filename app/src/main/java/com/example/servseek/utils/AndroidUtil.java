@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.example.servseek.utils.model.UserModel;
+import com.example.servseek.model.UserModel;
 
 public class AndroidUtil {
    public static void showToast(Context context,String message){
