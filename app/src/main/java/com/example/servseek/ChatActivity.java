@@ -5,9 +5,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.annotation.NonNull;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.servseek.adapter.ChatRecyclerAdapter;
@@ -38,7 +41,7 @@ public class ChatActivity extends AppCompatActivity {
     ImageButton backBtn;
     TextView otherUsername;
     RecyclerView recyclerView;
-
+    ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +55,19 @@ public class ChatActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.back_btn);
         otherUsername = findViewById(R.id.other_username);
         recyclerView = findViewById(R.id.chat_recycler_view);
+        imageView = findViewById(R.id.profile_pic_image_view);
+        FirebaseUtil.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
+                .addOnCompleteListener(t -> {
+                    if(t.isSuccessful()){
+                        Uri uri  = t.getResult();
+                        AndroidUtil.setProfilePic(this,uri,imageView);
+                    }
+                });
 
     backBtn.setOnClickListener((v)->{
-        onBackPressed();
+        startActivity(new Intent(ChatActivity.this, MainActivity.class));
+        getSupportFragmentManager().beginTransaction()
+                .add(android.R.id.content, new HomeFragment()).commit();
     });
     otherUsername.setText(otherUser.getUsername());
         getOrCreateChatroomModel();

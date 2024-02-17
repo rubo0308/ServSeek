@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -38,7 +39,9 @@ public class SearchUserActivity extends AppCompatActivity {
 
 
         backButton.setOnClickListener(v -> {
-            onBackPressed();
+            startActivity(new Intent(SearchUserActivity.this, MainActivity.class));
+            getSupportFragmentManager().beginTransaction()
+                    .add(android.R.id.content, new HomeFragment()).commit();
         });
 
         searchButton.setOnClickListener(v -> {
