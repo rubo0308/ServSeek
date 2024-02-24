@@ -64,12 +64,12 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
 
-    backBtn.setOnClickListener((v)->{
-        startActivity(new Intent(ChatActivity.this, MainActivity.class));
-        getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, new HomeFragment()).commit();
-    });
-    otherUsername.setText(otherUser.getUsername());
+        backBtn.setOnClickListener((v)->{
+            startActivity(new Intent(ChatActivity.this, MainActivity.class));
+            getSupportFragmentManager().beginTransaction()
+                    .add(android.R.id.content, new HomeFragment()).commit();
+        });
+        otherUsername.setText(otherUser.getUsername());
         getOrCreateChatroomModel();
         sendMessageBtn.setOnClickListener((v -> {
             String message = messageInput.getText().toString().trim();
@@ -84,50 +84,50 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-   void setupChatRecyclerView() {
-       Query query = FirebaseUtil.getChatroomMessageReference(chatroomId)
-               .orderBy("timestamp", Query.Direction.DESCENDING);
+    void setupChatRecyclerView() {
+        Query query = FirebaseUtil.getChatroomMessageReference(chatroomId)
+                .orderBy("timestamp", Query.Direction.DESCENDING);
 
-       FirestoreRecyclerOptions<ChatMessageModel> options = new FirestoreRecyclerOptions.Builder<ChatMessageModel>()
-               .setQuery(query,ChatMessageModel.class).build();
+        FirestoreRecyclerOptions<ChatMessageModel> options = new FirestoreRecyclerOptions.Builder<ChatMessageModel>()
+                .setQuery(query,ChatMessageModel.class).build();
 
-       adapter = new ChatRecyclerAdapter(options,getApplicationContext());
-       LinearLayoutManager manager = new LinearLayoutManager(this);
-       manager.setReverseLayout(true);
-       recyclerView.setLayoutManager(manager);
-       recyclerView.setAdapter(adapter);
-       adapter.startListening();
-       adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-           @Override
-           public void onItemRangeInserted(int positionStart, int itemCount) {
-               super.onItemRangeInserted(positionStart, itemCount);
-               recyclerView.smoothScrollToPosition(0);
-           }
-       });
+        adapter = new ChatRecyclerAdapter(options,getApplicationContext());
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setReverseLayout(true);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                recyclerView.smoothScrollToPosition(0);
+            }
+        });
 
     }
 
     void sendMessageToUser(String message) {
-         chatroomModel.setLastMessageTimestamp(Timestamp.now());
-         chatroomModel.setLastMessageSenderId(FirebaseUtil.currentUserId());
-         chatroomModel.setLastMessage(message);
-         FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
+        chatroomModel.setLastMessageTimestamp(Timestamp.now());
+        chatroomModel.setLastMessageSenderId(FirebaseUtil.currentUserId());
+        chatroomModel.setLastMessage(message);
+        FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
 
-         ChatMessageModel chatMessageModel = new ChatMessageModel(message,FirebaseUtil.currentUserId(),Timestamp.now());
-         FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
-                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        ChatMessageModel chatMessageModel = new ChatMessageModel(message,FirebaseUtil.currentUserId(),Timestamp.now());
+        FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
 
-                     @Override
-                     public void onComplete(@NonNull Task<DocumentReference> task) {
-                         if(task.isSuccessful()){
-                             messageInput.setText("");
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        if(task.isSuccessful()){
+                            messageInput.setText("");
 
-                         }
-                     }
+                        }
+                    }
 
-                 });
+                });
 
-     }
+    }
 
     void getOrCreateChatroomModel(){
         FirebaseUtil.getChatroomReference(chatroomId).get().addOnCompleteListener(task -> {

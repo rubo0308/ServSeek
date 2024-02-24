@@ -2,17 +2,29 @@ package com.example.servseek.model;
 
 import com.google.firebase.Timestamp;
 
+import java.util.List;
+
 public class UserModel {
     private String phone;
     private String username;
     private Timestamp createdTimestamp;
     private String userId;
     private String fcmToken;
+    private String projects;
+    private String old;
+    private String name;
+    private String yearsOfExperience;
+    private String about;
+    private String imageUrl; // Image URL field added
+
+    private List<String> portfolio;
+
+
 
     public UserModel() {
     }
 
-    public UserModel(String phone, String username, Timestamp createdTimestamp,String userId) {
+    public UserModel(String phone, String username, Timestamp createdTimestamp, String userId) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
@@ -57,5 +69,61 @@ public class UserModel {
 
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
+    }
+
+    public String getProjects() {
+        return projects;
+    }
+
+    public void setProjects(String projects) {
+        this.projects = projects;
+    }
+
+    public String getOld() {
+        return old;
+    }
+
+    public void setOld(String old) {
+        this.old = old;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getYearsOfExperience() {
+        return yearsOfExperience;
+    }
+
+    public void setYearsOfExperience(String yearsOfExperience) {
+        this.yearsOfExperience = yearsOfExperience;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public List<String> getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(List<String> portfolio) {
+        this.portfolio = portfolio;
     }
 }

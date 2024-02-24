@@ -61,12 +61,12 @@ public class MainActivity extends AppCompatActivity {
 
     void getFCMToken() {
 
-            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    String token = task.getResult();
-                    FirebaseUtil.currentUserDetails().update("fcmToken",token);
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String token = task.getResult();
+                FirebaseUtil.currentUserDetails().update("fcmToken",token);
 
-                }
-            });
-        }
+            }
+        });
     }
+}
