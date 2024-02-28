@@ -1709,3 +1709,6 @@ BUILD SUCCESSFUL in 1s
 2024-02-28T18:36:14.167+0400 [DEBUG] [org.gradle.process.internal.health.memory.DefaultMemoryManager] 1678050918 memory requested, 863883264 free
 2024-02-28T18:36:14.167+0400 [DEBUG] [org.gradle.workers.internal.WorkerDaemonExpiration] Will attempt to release 1600 of memory
 2024-02-28T18:36:14.167+0400 [DEBUG] [org.gradle.process.internal.health.memory.DefaultMemoryManager] 1678050918 memory requested, 0 released, 863883264 free
+2024-02-28T18:36:19.165+0400 [DEBUG] [org.gradle.process.internal.health.memory.DefaultMemoryManager] 1678050918 memory requested, 881999872 free
+2024-02-28T18:36:19.165+0400 [DEBUG] [org.gradle.workers.internal.WorkerDaemonExpiration] Will attempt to release 1600 of memory
+2024-02-28T18:36:19.167+0400 [DEBUG] [org.gradle.process.internal.health.memory.DefaultMemoryManager] 1678050918 memory requested, 0 released, 881999872 free
