@@ -18,7 +18,8 @@ public class UserModel {
     private String imageUrl; // Image URL field added
 
     private List<String> portfolio;
-
+    private String id; // Assuming there's an ID field
+    private String email;
 
 
     public UserModel() {
@@ -126,4 +127,23 @@ public class UserModel {
     public void setPortfolio(List<String> portfolio) {
         this.portfolio = portfolio;
     }
+
+
+    // Getters and Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }

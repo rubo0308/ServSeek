@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class FirebaseUtil {
+
     // Returns the current user's ID from FirebaseAuth
     public static String currentUserId() {
         return FirebaseAuth.getInstance().getUid();
@@ -121,5 +122,5 @@ public class FirebaseUtil {
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Portfolio image URL added to Firestore"))
                 .addOnFailureListener(e -> Log.e(TAG, "Error updating portfolio image URL", e));
     }
-
+    // Initialize Firebase Database and optionally enable offline persistence
 }

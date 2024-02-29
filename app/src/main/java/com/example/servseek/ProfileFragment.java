@@ -44,6 +44,9 @@ public class ProfileFragment extends Fragment {
     Uri selectedImageUri;
 
     private PortfolioAdapter adapter;
+    EditText editTextEmail;
+     Button btnSaveEmail;
+
     private final int PICK_IMAGE_REQUEST = 1; // Request code for picking an image
     private int currentImagePosition = -1;
 
@@ -77,6 +80,7 @@ public class ProfileFragment extends Fragment {
         updateProfileBtn = view.findViewById(R.id.profle_update_btn); // Ensure the ID matches your layout
         progressBar = view.findViewById(R.id.profile_progress_bar);
         logoutBtn = view.findViewById(R.id.logout_btn);
+
 
         getUserData();
 
