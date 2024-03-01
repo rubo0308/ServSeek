@@ -28,7 +28,7 @@
         android:text="Language" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/notifications_button"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_below="@id/button"
@@ -44,7 +44,7 @@
         android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_below="@id/button2"
+        android:layout_below="@id/notifications_button"
         android:layout_marginTop="5dp"
         android:background="?android:attr/selectableItemBackground"
         android:drawableEnd="@drawable/ic_arrow_forward"

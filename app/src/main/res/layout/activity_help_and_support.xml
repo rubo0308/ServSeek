@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".HelpAndSupportActivity">
+
+    <TextView
+        android:id="@+id/help_and_support_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Help &amp; Support"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp" />
+    <!-- Replace with your own background if needed -->
+    <EditText
+        android:id="@+id/inputEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Your Email Address"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Save Button for Email Address -->
+    <Button
+        android:id="@+id/btnSaveEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Email"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"/>
+
+
+    <!-- FAQs Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FAQs"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp" />
+
+    <LinearLayout
+        android:id="@+id/faq_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="16dp">
+
+        <!-- Dynamically add FAQ questions here, or use a ListView/RecyclerView -->
+
+    </LinearLayout>
+
+    <!-- Contact Support Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contact Support"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <LinearLayout
+        android:id="@+id/contact_support_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="16dp">
+
+        <!-- Contact Support Section -->
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="16dp">
+
+            <!-- Email Contact -->
+            <!-- Email Contact -->
+            <TextView
+                android:id="@+id/email_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email: rubenhalla16@gmail.com"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_marginTop="16dp" />
+
+
+            <!-- Phone Contact -->
+            <!-- Phone Contact -->
+            <TextView
+                android:id="@+id/phone_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Phone:+37443693999"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_marginTop="16dp" />
+
+
+            <!-- Chat Service Contact -->
+            <Button
+                android:id="@+id/chat_support_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chat with Support"
+                android:layout_marginBottom="16dp" />
+
+
+            <!-- Additional contact methods can be added here -->
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!-- Additional help sections can be added here -->
+
+</LinearLayout>
