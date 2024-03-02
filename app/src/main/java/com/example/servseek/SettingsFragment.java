@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.servseek.utils.FirebaseUtil;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class SettingsFragment extends Fragment {
+    FirebaseAuth mAuth;
     TextView logoutButton;
     TextView helpSupportButton;
     TextView notificationsButton; // Add this line
@@ -28,12 +30,22 @@ public class SettingsFragment extends Fragment {
 
         // Initialize the logout button and its click listener
         logoutButton = view.findViewById(R.id.logout_button);
+        logoutButton.setClickable(true);
+
+        mAuth = FirebaseAuth.getInstance();
+
         logoutButton.setOnClickListener((v) -> FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                FirebaseUtil.logout();
-                Intent intent = new Intent(getContext(), SplashActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+            if (mAuth.getCurrentUser() == null) {
+                logoutButton.setClickable(false);
+            } else if (mAuth.getCurrentUser() != null) {
+                logoutButton.setClickable(true);
+
+                if (task.isSuccessful()) {
+                    FirebaseUtil.logout();
+                    Intent intent = new Intent(getContext(), SplashActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
             }
         }));
 
