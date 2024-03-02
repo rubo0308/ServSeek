@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +26,15 @@ public class HelpAndSupportActivity extends AppCompatActivity {
         TextView emailContact = findViewById(R.id.email_contact);
        // Reference to the EditText
         editTextEmail = findViewById(R.id.inputEmail); // Make sure ID matches in your XML
-        btnSaveEmail = findViewById(R.id.btnSaveEmail); // Make sure ID matches in your XML
+        btnSaveEmail = findViewById(R.id.btnSaveEmail);
+        ImageButton backButton = findViewById(R.id.back_bn);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Finish the activity and return to the previous one
+                finish();
+            }
+        });// Make sure ID matches in your XML
 
         btnSaveEmail.setOnClickListener(new View.OnClickListener() {
             @Override
