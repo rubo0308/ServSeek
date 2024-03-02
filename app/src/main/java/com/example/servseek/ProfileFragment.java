@@ -79,21 +79,12 @@ public class ProfileFragment extends Fragment {
         phoneInput = view.findViewById(R.id.profile_phone);
         updateProfileBtn = view.findViewById(R.id.profle_update_btn); // Ensure the ID matches your layout
         progressBar = view.findViewById(R.id.profile_progress_bar);
-        logoutBtn = view.findViewById(R.id.logout_btn);
+
 
 
         getUserData();
 
-        updateProfileBtn.setOnClickListener((v) -> updateBtnClick());
 
-        logoutBtn.setOnClickListener((v) -> FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                FirebaseUtil.logout();
-                Intent intent = new Intent(getContext(), SplashActivity.class); // Adjust as per your activity
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        }));
 
         profilePic.setOnClickListener((v) -> ImagePicker.with(this)
                 .cropSquare()
