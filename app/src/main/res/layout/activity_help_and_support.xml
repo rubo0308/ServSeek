@@ -19,7 +19,7 @@
         android:padding="20dp">
 
         <ImageButton
-            android:id="@+id/back_btn"
+            android:id="@+id/back_bn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="?attr/selectableItemBackgroundBorderless"

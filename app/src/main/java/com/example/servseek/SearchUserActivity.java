@@ -6,8 +6,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.servseek.adapter.SearchUserRecyclerAdapter;
 import com.example.servseek.utils.FirebaseUtil;
@@ -31,6 +34,21 @@ public class SearchUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_user);
 
         searchInput = findViewById(R.id.seach_username_input);
+        searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    String searchTerm = searchInput.getText().toString();
+                    if(searchTerm.isEmpty() || searchTerm.length()<3){
+                        searchInput.setError("Invalid Username");
+                    }
+                    setupSearchRecyclerView(searchTerm);
+                }
+                return false;
+            }
+        });
+
         searchButton = findViewById(R.id.search_user_btn);
         backButton = findViewById(R.id.back_btn);
         recyclerView = findViewById(R.id.search_user_recycler_view);
@@ -43,6 +61,8 @@ public class SearchUserActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, new HomeFragment()).commit();
         });
+
+
 
         searchButton.setOnClickListener(v -> {
             String searchTerm = searchInput.getText().toString();
