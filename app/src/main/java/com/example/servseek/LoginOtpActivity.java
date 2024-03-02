@@ -62,49 +62,49 @@ public class LoginOtpActivity extends AppCompatActivity {
             sendOtp(phoneNumber,true);
         });
     }
-        void sendOtp(String phoneNumber,boolean isResend){
-            startResendTimer();
+    void sendOtp(String phoneNumber,boolean isResend){
+        startResendTimer();
 
 
 
-            setInProgress(true);
-            PhoneAuthOptions.Builder builder =
-                    PhoneAuthOptions.newBuilder(mAuth)
-                            .setPhoneNumber(phoneNumber)
-                            .setTimeout(timeoutSeconds, TimeUnit.SECONDS)
-                            .setActivity(this)
-                            .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                                @Override
-                                public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                                    signIn(phoneAuthCredential);
-                                    setInProgress(false);
-                                }
+        setInProgress(true);
+        PhoneAuthOptions.Builder builder =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(phoneNumber)
+                        .setTimeout(timeoutSeconds, TimeUnit.SECONDS)
+                        .setActivity(this)
+                        .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                            @Override
+                            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                                signIn(phoneAuthCredential);
+                                setInProgress(false);
+                            }
 
-                                @Override
-                                public void onVerificationFailed(@NonNull FirebaseException e) {
-                                    AndroidUtil.showToast(getApplicationContext(), "OTP verification failed");
-                                    setInProgress(false);
+                            @Override
+                            public void onVerificationFailed(@NonNull FirebaseException e) {
+                                AndroidUtil.showToast(getApplicationContext(), "OTP verification failed");
+                                setInProgress(false);
 
-                                }
+                            }
 
-                                @Override
-                                public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                                    super.onCodeSent(s, forceResendingToken);
-                                    verificationCode = s;
-                                    resendingToken = forceResendingToken;
-                                    AndroidUtil.showToast(getApplicationContext(), "OTP sent successfully");
-                                    setInProgress(false);
+                            @Override
+                            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                super.onCodeSent(s, forceResendingToken);
+                                verificationCode = s;
+                                resendingToken = forceResendingToken;
+                                AndroidUtil.showToast(getApplicationContext(), "OTP sent successfully");
+                                setInProgress(false);
 
 
-                                }
-                            });
-            if(isResend){
-                PhoneAuthProvider.verifyPhoneNumber(builder.setForceResendingToken(resendingToken).build());
-            }else {
-                PhoneAuthProvider.verifyPhoneNumber(builder.build());
+                            }
+                        });
+        if(isResend){
+            PhoneAuthProvider.verifyPhoneNumber(builder.setForceResendingToken(resendingToken).build());
+        }else {
+            PhoneAuthProvider.verifyPhoneNumber(builder.build());
 
-            }
         }
+    }
 
 
 
@@ -125,15 +125,15 @@ public class LoginOtpActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    setInProgress(false);
-                    if(task.isSuccessful()){
-                        Intent intent = new Intent(LoginOtpActivity.this,LoginUsernameActivity.class);
-                        intent.putExtra("phone",phoneNumber);
-                        startActivity(intent);
-                    }else{
-                        AndroidUtil.showToast(getApplicationContext(),"OTP verification failed");
-                    }
+                setInProgress(false);
+                if(task.isSuccessful()){
+                    Intent intent = new Intent(LoginOtpActivity.this,LoginUsernameActivity.class);
+                    intent.putExtra("phone",phoneNumber);
+                    startActivity(intent);
+                }else{
+                    AndroidUtil.showToast(getApplicationContext(),"OTP verification failed");
                 }
+            }
 
         });
 

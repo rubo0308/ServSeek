@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,8 @@ import com.example.servseek.model.UserModel;
 import com.example.servseek.utils.AndroidUtil;
 import com.example.servseek.utils.FirebaseUtil;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -34,20 +37,18 @@ import java.util.List;
 public class ProfileFragment extends Fragment {
 
     ImageView profilePic;
-    EditText usernameInput;
-    EditText phoneInput;
+    EditText usernameInput, phoneInput;
     Button updateProfileBtn;
     ProgressBar progressBar;
+EditText professionInput;
     TextView logoutBtn;
-    UserModel currentUserModel;
+    UserModel currentUserModel;    EditText aboutInput; // Add this line
+
     ActivityResultLauncher<Intent> imagePickLauncher;
     Uri selectedImageUri;
 
     private PortfolioAdapter adapter;
-    EditText editTextEmail;
-     Button btnSaveEmail;
-
-    private final int PICK_IMAGE_REQUEST = 1; // Request code for picking an image
+    private final int PICK_IMAGE_REQUEST = 1;
     private int currentImagePosition = -1;
 
     public ProfileFragment() {
@@ -66,25 +67,45 @@ public class ProfileFragment extends Fragment {
                             setImageUri(selectedImageUri); // Update the ImageView with the selected image
                         }
                     }
-                }
-        );
+                });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        // Initialize views
         profilePic = view.findViewById(R.id.profile_image_view);
-        usernameInput = view.findViewById(R.id.profile_username);
+        usernameInput = view.findViewById(R.id.editTextName); // Correct ID for username
         phoneInput = view.findViewById(R.id.profile_phone);
-        updateProfileBtn = view.findViewById(R.id.profle_update_btn); // Ensure the ID matches your layout
+        aboutInput = view.findViewById(R.id.editTextProfessionalDescription);
+        updateProfileBtn = view.findViewById(R.id.profle_update_btn); // Make sure ID matches XML
         progressBar = view.findViewById(R.id.profile_progress_bar);
+        logoutBtn = view.findViewById(R.id.logout_btn);
 
 
+        // Assuming you want to include profession information as well
+       professionInput = view.findViewById(R.id.profile_prof);
 
         getUserData();
 
+        logoutBtn.setOnClickListener((v)->{
+            FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        FirebaseUtil.logout();
+                        Intent intent = new Intent(getContext(),SplashActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                }
+            });
 
+
+
+        });
 
         profilePic.setOnClickListener((v) -> ImagePicker.with(this)
                 .cropSquare()
@@ -100,8 +121,9 @@ public class ProfileFragment extends Fragment {
         adapter = new PortfolioAdapter(getContext(), this::onImageClick);
         portfolioRecyclerView.setAdapter(adapter);
 
-        // Fetch portfolio images from Firestore
         fetchPortfolioImages();
+
+        updateProfileBtn.setOnClickListener(v -> updateBtnClick());
 
         return view;
     }
@@ -120,23 +142,18 @@ public class ProfileFragment extends Fragment {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             if (currentImagePosition != -1) {
-                adapter.addImageUri(imageUri.toString()); // Convert URI to string and add to adapter
-                currentImagePosition = -1; // Reset after handling
-                uploadPortfolioImage(imageUri); // Upload the image to Firebase Storage
+                adapter.addImageUri(imageUri.toString());
+                currentImagePosition = -1;
+                uploadPortfolioImage(imageUri);
             }
         }
     }
-
 
     private void uploadPortfolioImage(Uri imageUri) {
         StorageReference portfolioRef = FirebaseStorage.getInstance().getReference().child("portfolio_images/" + System.currentTimeMillis() + ".jpg");
         portfolioRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> portfolioRef.getDownloadUrl().addOnSuccessListener(uri -> {
             String imageUrl = uri.toString();
-            // Update the Firebase Realtime Database or Firestore with the image URL
-            // For example, if using Firestore:
             FirebaseUtil.updatePortfolioImageUrl(imageUrl);
-
-            // Here you should update your portfolio list and Firestore database with the new image URL
             FirebaseUtil.uploadImageToStorage(FirebaseUtil.currentUserId(), uri);
             AndroidUtil.showToast(getContext(), "Upload successful");
         })).addOnFailureListener(e -> AndroidUtil.showToast(getContext(), "Upload failed: " + e.getMessage()));
@@ -145,7 +162,6 @@ public class ProfileFragment extends Fragment {
     private void fetchPortfolioImages() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference userRef = db.collection("users").document(FirebaseUtil.currentUserId());
-
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 List<String> portfolio = documentSnapshot.toObject(UserModel.class).getPortfolio();
@@ -153,7 +169,7 @@ public class ProfileFragment extends Fragment {
                     // Fetch image URLs from Firebase Storage
                     for (String imageUrl : portfolio) {
                         FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl).getDownloadUrl()
-                                .addOnSuccessListener(uri -> {
+                                   .addOnSuccessListener(uri -> {
                                     adapter.addImageUri(uri.toString());
                                 });
                     }
@@ -162,14 +178,19 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-
     void updateBtnClick() {
+        String profession = professionInput.getText().toString();
+
         String newUsername = usernameInput.getText().toString();
+        String aboutText = aboutInput.getText().toString();
+
         if (newUsername.isEmpty() || newUsername.length() < 3) {
             usernameInput.setError("Username length should be at least 3 chars");
             return;
         }
         currentUserModel.setUsername(newUsername);
+        currentUserModel.setAbout(aboutText);
+        currentUserModel.setProfession(profession);
         setInProgress(true);
 
         if (selectedImageUri != null) {
@@ -204,14 +225,11 @@ public class ProfileFragment extends Fragment {
         FirebaseUtil.getCurrentProfilePicStorageRef().getDownloadUrl()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Profile picture exists, set it
                         Uri uri = task.getResult();
                         AndroidUtil.setProfilePic(getContext(), uri, profilePic);
                     } else {
-                        // Profile picture does not exist, set a default image
-                        profilePic.setImageResource(R.drawable.baseline_person_24); // Fallback image
+                        profilePic.setImageResource(R.drawable.baseline_person_24);
                     }
-                    // Continue to fetch other user details
                     FirebaseUtil.currentUserDetails().get().addOnCompleteListener(task2 -> {
                         setInProgress(false);
                         if (task2.isSuccessful() && task2.getResult() != null) {
@@ -219,6 +237,7 @@ public class ProfileFragment extends Fragment {
                             if (currentUserModel != null) {
                                 usernameInput.setText(currentUserModel.getUsername());
                                 phoneInput.setText(currentUserModel.getPhone());
+                                aboutInput.setText(currentUserModel.getAbout());
                             }
                         }
                     });

@@ -26,7 +26,18 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.Arrays;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ChatActivity extends AppCompatActivity {
     UserModel otherUser;
@@ -35,20 +46,20 @@ public class ChatActivity extends AppCompatActivity {
     ChatRecyclerAdapter adapter;
 
 
-
     EditText messageInput;
     ImageButton sendMessageBtn;
     ImageButton backBtn;
     TextView otherUsername;
     RecyclerView recyclerView;
     ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
         otherUser = AndroidUtil.getUserModelFromIntent(getIntent());
-        chatroomId = FirebaseUtil.getChatroomId(FirebaseUtil.currentUserId(),otherUser.getUserId());
+        chatroomId = FirebaseUtil.getChatroomId(FirebaseUtil.currentUserId(), otherUser.getUserId());
 
         messageInput = findViewById(R.id.chat_message_input);
         sendMessageBtn = findViewById(R.id.message_send_btn);
@@ -58,13 +69,13 @@ public class ChatActivity extends AppCompatActivity {
         imageView = findViewById(R.id.profile_pic_image_view);
         FirebaseUtil.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
                 .addOnCompleteListener(t -> {
-                    if(t.isSuccessful()){
-                        Uri uri  = t.getResult();
-                        AndroidUtil.setProfilePic(this,uri,imageView);
+                    if (t.isSuccessful()) {
+                        Uri uri = t.getResult();
+                        AndroidUtil.setProfilePic(this, uri, imageView);
                     }
                 });
 
-        backBtn.setOnClickListener((v)->{
+        backBtn.setOnClickListener((v) -> {
             startActivity(new Intent(ChatActivity.this, MainActivity.class));
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, new HomeFragment()).commit();
@@ -73,7 +84,7 @@ public class ChatActivity extends AppCompatActivity {
         getOrCreateChatroomModel();
         sendMessageBtn.setOnClickListener((v -> {
             String message = messageInput.getText().toString().trim();
-            if(message.isEmpty())
+            if (message.isEmpty())
                 return;
             sendMessageToUser(message);
         }));
@@ -89,9 +100,9 @@ public class ChatActivity extends AppCompatActivity {
                 .orderBy("timestamp", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<ChatMessageModel> options = new FirestoreRecyclerOptions.Builder<ChatMessageModel>()
-                .setQuery(query,ChatMessageModel.class).build();
+                .setQuery(query, ChatMessageModel.class).build();
 
-        adapter = new ChatRecyclerAdapter(options,getApplicationContext());
+        adapter = new ChatRecyclerAdapter(options, getApplicationContext());
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         recyclerView.setLayoutManager(manager);
@@ -113,14 +124,15 @@ public class ChatActivity extends AppCompatActivity {
         chatroomModel.setLastMessage(message);
         FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
 
-        ChatMessageModel chatMessageModel = new ChatMessageModel(message,FirebaseUtil.currentUserId(),Timestamp.now());
+        ChatMessageModel chatMessageModel = new ChatMessageModel(message, FirebaseUtil.currentUserId(), Timestamp.now());
         FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
 
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             messageInput.setText("");
+                            sendNotification(message);
 
                         }
                     }
@@ -129,15 +141,16 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    void getOrCreateChatroomModel(){
+
+    void getOrCreateChatroomModel() {
         FirebaseUtil.getChatroomReference(chatroomId).get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 chatroomModel = task.getResult().toObject(ChatroomModel.class);
-                if(chatroomModel==null){
+                if (chatroomModel == null) {
                     //first time chat
                     chatroomModel = new ChatroomModel(
                             chatroomId,
-                            Arrays.asList(FirebaseUtil.currentUserId(),otherUser.getUserId()),
+                            Arrays.asList(FirebaseUtil.currentUserId(), otherUser.getUserId()),
                             Timestamp.now(),
                             ""
                     );
@@ -147,5 +160,68 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    void sendNotification(String message){
 
+        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                UserModel currentUser = task.getResult().toObject(UserModel.class);
+                try{
+                    JSONObject jsonObject  = new JSONObject();
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title",currentUser.getUsername());
+                    notificationObj.put("body",message);
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("userId",currentUser.getUserId());
+
+                    jsonObject.put("notification",notificationObj);
+                    jsonObject.put("data",dataObj);
+                    jsonObject.put("to",otherUser.getFcmToken());
+
+                    callApi(jsonObject);
+
+
+                }catch (Exception e){
+
+                }
+
+            }
+        });
+
+    }
+
+
+    public void callApi(JSONObject jsonObject) {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://fcm.googleapis.com/fcm/send";
+        RequestBody body = RequestBody.create(jsonObject.toString(), JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .header("Authorization", "Bearer AAAA-Zryz50:APA91bHuVFTN_KoqsnwGX65hYXcnFoW1NsJy0PNYBi6sCzo5mj3CKujXq3k8Z3d11Nm3VCU6cGJ1R4_l_eSITVg1jWNZioRG70fG2SId5DdBvpUGkQSOKugd169BqlqU8cLzJo0vtl8d") // Replace YOUR_SERVER_KEY_HERE with your actual FCM server key.
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                // Handle the failure to send the request
+                e.printStackTrace(); // Log the error or handle it as needed
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                } else {
+                    // Handle successful response
+                    String responseData = response.body().string();
+                    System.out.println("Response from FCM: " + responseData);
+                    // Additional logic to handle the response appropriately
+                }
+            }
+        });
+    }
 }

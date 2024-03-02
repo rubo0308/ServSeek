@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -40,7 +42,7 @@ public class SearchUserActivity extends AppCompatActivity {
 
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String searchTerm = searchInput.getText().toString();
-                    if(searchTerm.isEmpty() || searchTerm.length()<3){
+                    if(searchTerm.isEmpty() ){
                         searchInput.setError("Invalid Username");
                     }
                     setupSearchRecyclerView(searchTerm);
@@ -55,6 +57,24 @@ public class SearchUserActivity extends AppCompatActivity {
 
         searchInput.requestFocus();
 
+        searchInput.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().isEmpty()) setupSearchRecyclerView(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         backButton.setOnClickListener(v -> {
             startActivity(new Intent(SearchUserActivity.this, MainActivity.class));
@@ -66,7 +86,7 @@ public class SearchUserActivity extends AppCompatActivity {
 
         searchButton.setOnClickListener(v -> {
             String searchTerm = searchInput.getText().toString();
-            if(searchTerm.isEmpty() || searchTerm.length()<3){
+            if(searchTerm.isEmpty() ){
                 searchInput.setError("Invalid Username");
                 return;
             }

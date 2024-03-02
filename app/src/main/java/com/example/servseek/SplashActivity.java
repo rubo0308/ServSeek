@@ -21,6 +21,7 @@ public class SplashActivity extends AppCompatActivity {
         if(getIntent().getExtras()!=null){
             //from notification
             String userId = getIntent().getExtras().getString("userId");
+            System.out.println(userId);
             FirebaseUtil.allUserCollectionReference().document(userId).get()
                     .addOnCompleteListener(task -> {
                         if(task.isSuccessful()) {

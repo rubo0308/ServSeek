@@ -40,7 +40,6 @@ public class HomeFragment extends Fragment {
         return view;
     }
     void setupRecyclerView() {
-
         Query query = FirebaseUtil.allChatroomCollectionReference()
                 .whereArrayContains("userIds",FirebaseUtil.currentUserId())
                 .orderBy("lastMessageTimestamp",Query.Direction.DESCENDING);
@@ -54,9 +53,6 @@ public class HomeFragment extends Fragment {
         adapter.startListening();
 
     }
-
-
-
 
 
     @Override

@@ -34,41 +34,57 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
     protected void onBindViewHolder(@NonNull ChatroomModelViewHolder holder, int position, @NonNull ChatroomModel model) {
         FirebaseUtil.getOtherUserFromChatroom(model.getUserIds())
                 .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        boolean lastMessageSentByMe = model.getLastMessageSenderId().equals(FirebaseUtil.currentUserId());
-
+                    if (task.isSuccessful() && task.getResult() != null) {
                         UserModel otherUserModel = task.getResult().toObject(UserModel.class);
-                        FirebaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUserId()).getDownloadUrl()
-                                .addOnCompleteListener(t -> {
-                                    if (t.isSuccessful()) {
-                                        Uri uri = t.getResult();
-                                        AndroidUtil.setProfilePic(context, uri, holder.profilePic);
-                                    }
-                                });
+                        if (otherUserModel != null) {
+                            boolean lastMessageSentByMe = model.getLastMessageSenderId() != null && model.getLastMessageSenderId().equals(FirebaseUtil.currentUserId());
 
-                        holder.usernameText.setText(otherUserModel.getUsername());
+                            FirebaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUserId()).getDownloadUrl()
+                                    .addOnCompleteListener(t -> {
+                                        if (t.isSuccessful() && t.getResult() != null) {
+                                            Uri uri = t.getResult();
+                                            AndroidUtil.setProfilePic(context, uri, holder.profilePic);
+                                        }
+                                    });
 
-                        // Truncate the last message to a maximum of 15 characters
-                        String lastMessage = model.getLastMessage();
-                        if (lastMessage != null && lastMessage.length() > 15) {
-                            lastMessage = lastMessage.substring(0, 15) + "...";
+                            holder.usernameText.setText(otherUserModel.getUsername());
+
+                            String lastMessage = model.getLastMessage();
+                            if (lastMessage != null) {
+                                lastMessage = lastMessage.replaceAll("\\s+", "");
+                                if (lastMessage.length() > 15) {
+                                    lastMessage = lastMessage.substring(0, 15) + "...";
+                                }
+                            } else {
+                                lastMessage = "No message"; // Default text if last message is null
+                            }
+
+                            if (lastMessageSentByMe) {
+                                holder.lastMessageText.setText("You: " + lastMessage);
+                            } else {
+                                holder.lastMessageText.setText(lastMessage);
+                            }
+
+                            holder.lastMessageTime.setText(FirebaseUtil.timestampToString(model.getLastMessageTimestamp()));
+                        } else {
+                            // Handle null UserModel scenario
+                            holder.usernameText.setText("Unknown User");
+                            holder.lastMessageText.setText("No message");
+                            // Consider setting a default or placeholder profile picture
                         }
 
-                        if (lastMessageSentByMe)
-                            holder.lastMessageText.setText("You : " + lastMessage);
-                        else
-                            holder.lastMessageText.setText(lastMessage);
-
-                        holder.lastMessageTime.setText(FirebaseUtil.timestampToString(model.getLastMessageTimestamp()));
-
                         holder.itemView.setOnClickListener(v -> {
-                            // navigate to chat activity
-                            Intent intent = new Intent(context, ChatActivity.class);
-                            AndroidUtil.passUserModelAsIntent(intent, otherUserModel);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
+                            if (otherUserModel != null) {
+                                Intent intent = new Intent(context, ChatActivity.class);
+                                AndroidUtil.passUserModelAsIntent(intent, otherUserModel);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(intent);
+                            }
                         });
 
+                    } else {
+                        // Handle the case where task is not successful or result is null
+                        // Log an error or show a message to the user
                     }
                 });
     }
