@@ -22,6 +22,8 @@ import com.example.servseek.model.UserModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.util.Locale;
+
 public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserModel,SearchUserRecyclerAdapter.UserModelViewHolder> {
 
     Context context;
@@ -35,6 +37,8 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
     protected void onBindViewHolder(@NonNull UserModelViewHolder holder, int position, @NonNull UserModel model) {
         holder.usernameText.setText(model.getUsername());
         holder.phoneText.setText(model.getPhone());
+        holder.ratingText.setText(String.format(Locale.getDefault(), "%.1f", model.getAverageRating()));
+
         if(model.getUserId().equals(FirebaseUtil.currentUserId())){
             holder.usernameText.setText(model.getUsername()+" (Me)");
         }
@@ -67,12 +71,15 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
         TextView usernameText;
         TextView phoneText;
         ImageView profilePic;
+        TextView ratingText;
 
         public UserModelViewHolder(@NonNull View itemView) {
             super(itemView);
             usernameText = itemView.findViewById(R.id.user_name_text);
             phoneText = itemView.findViewById(R.id.phone_text);
             profilePic = itemView.findViewById(R.id.profile_pic_image_view);
+            ratingText = itemView.findViewById(R.id.rating_text); // Initialize the TextView
+
 
         }
     }

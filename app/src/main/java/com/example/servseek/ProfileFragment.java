@@ -26,6 +26,7 @@ import com.example.servseek.utils.FirebaseUtil;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -42,6 +43,7 @@ public class ProfileFragment extends Fragment {
     ProgressBar progressBar;
 EditText professionInput;
     TextView logoutBtn;
+    private TextView averageNumberTextView;
     UserModel currentUserModel;    EditText aboutInput; // Add this line
 
     ActivityResultLauncher<Intent> imagePickLauncher;
@@ -50,6 +52,7 @@ EditText professionInput;
     private PortfolioAdapter adapter;
     private final int PICK_IMAGE_REQUEST = 1;
     private int currentImagePosition = -1;
+    private int avarage;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -68,6 +71,7 @@ EditText professionInput;
                         }
                     }
                 });
+
     }
 
     @Override
@@ -77,16 +81,15 @@ EditText professionInput;
 
         // Initialize views
         profilePic = view.findViewById(R.id.profile_image_view);
-        usernameInput = view.findViewById(R.id.editTextName); // Correct ID for username
+        usernameInput = view.findViewById(R.id.editTextName);
         phoneInput = view.findViewById(R.id.profile_phone);
         aboutInput = view.findViewById(R.id.editTextProfessionalDescription);
-        updateProfileBtn = view.findViewById(R.id.profle_update_btn); // Make sure ID matches XML
+        updateProfileBtn = view.findViewById(R.id.profle_update_btn);
         progressBar = view.findViewById(R.id.profile_progress_bar);
         logoutBtn = view.findViewById(R.id.logout_btn);
+        averageNumberTextView = view.findViewById(R.id.averageNumberTextView);
+        professionInput = view.findViewById(R.id.profile_prof);
 
-
-        // Assuming you want to include profession information as well
-       professionInput = view.findViewById(R.id.profile_prof);
 
         getUserData();
 
@@ -124,6 +127,12 @@ EditText professionInput;
         fetchPortfolioImages();
 
         updateProfileBtn.setOnClickListener(v -> updateBtnClick());
+
+        Button evaluateButton = view.findViewById(R.id.evaluateButton);
+        evaluateButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), EvaluetActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }
@@ -180,6 +189,7 @@ EditText professionInput;
 
     void updateBtnClick() {
         String profession = professionInput.getText().toString();
+
 
         String newUsername = usernameInput.getText().toString();
         String aboutText = aboutInput.getText().toString();
@@ -238,6 +248,7 @@ EditText professionInput;
                                 usernameInput.setText(currentUserModel.getUsername());
                                 phoneInput.setText(currentUserModel.getPhone());
                                 aboutInput.setText(currentUserModel.getAbout());
+                                averageNumberTextView.setText(String.valueOf(currentUserModel.getAverageRating()));
                             }
                         }
                     });

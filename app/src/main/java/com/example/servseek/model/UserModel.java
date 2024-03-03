@@ -7,19 +7,25 @@ import java.util.List;
 public class UserModel {
     private String phone;
     private String username;
+
+    private float averageRating;
+
+    private String profession;
     private Timestamp createdTimestamp;
     private String userId;
     private String fcmToken;
-    private String projects;
-    private String old;
+
     private String name;
-    private String yearsOfExperience;
+
+
     private String about;
-    private String imageUrl; // Image URL field added
+   private String imageUrl; // Image URL field added
 
     private List<String> portfolio;
-    private String id; // Assuming there's an ID field
+    private String id;
     private String email;
+
+
 
 
     public UserModel() {
@@ -67,26 +73,18 @@ public class UserModel {
     public String getFcmToken() {
         return fcmToken;
     }
+    public String getProfession() {
+        return profession;
+    }
 
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
     }
 
-    public String getProjects() {
-        return projects;
-    }
 
-    public void setProjects(String projects) {
-        this.projects = projects;
-    }
-
-    public String getOld() {
-        return old;
-    }
-
-    public void setOld(String old) {
-        this.old = old;
-    }
 
     public String getName() {
         return name;
@@ -96,13 +94,7 @@ public class UserModel {
         this.name = name;
     }
 
-    public String getYearsOfExperience() {
-        return yearsOfExperience;
-    }
 
-    public void setYearsOfExperience(String yearsOfExperience) {
-        this.yearsOfExperience = yearsOfExperience;
-    }
 
     public String getAbout() {
         return about;
@@ -112,13 +104,14 @@ public class UserModel {
         this.about = about;
     }
 
-    public String getImageUrl() {
+
+   /* public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
+    }*/
 
     public List<String> getPortfolio() {
         return portfolio;
@@ -138,12 +131,12 @@ public class UserModel {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public float getAverageRating() {
+        return averageRating;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAverageRating(float averageRating) {
+        this.averageRating = averageRating;
     }
 
 }
