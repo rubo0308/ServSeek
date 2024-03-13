@@ -1,0 +1,19 @@
+-dontwarn com.firebase.ui.firestore.paging.**
+
+# Generated keep rule for Lifecycle observer adapter.
+-if class com.firebase.ui.firestore.paging.FirestorePagingAdapter {
+    <init>(...);
+}
+-keep class com.firebase.ui.firestore.paging.FirestorePagingAdapter_LifecycleAdapter {
+    <init>(...);
+}
+
+# Generated keep rule for Lifecycle observer adapter.
+-if class com.firebase.ui.firestore.FirestoreRecyclerAdapter {
+    <init>(...);
+}
+-keep class com.firebase.ui.firestore.FirestoreRecyclerAdapter_LifecycleAdapter {
+    <init>(...);
+}
+
+
