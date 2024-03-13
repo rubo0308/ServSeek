@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/filter_all"
+        android:title="All" />
+    <item
+        android:id="@+id/filter_four_stars"
+        android:title="≥ 4 stars" />
+    <item
+        android:id="@+id/filter_four_point_five_stars"
+        android:title="≥ 4.5 stars" />
+</menu>

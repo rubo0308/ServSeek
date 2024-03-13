@@ -1,0 +1,3 @@
+com.google.firebase.firestore.ktx.BuildConfig
+com.google.firebase.firestore.ktx.FirebaseFirestoreLegacyRegistrar
+com.google.firebase.firestore.ktx.LoggingKt

@@ -29,7 +29,7 @@ public class EvaluetActivity extends AppCompatActivity {
 
 
     private RatingBar ratingBar, ratingBar1, ratingBar2, ratingBar3, ratingBar4;
-    private boolean[] isRated = {false, false, false, false, false}; // Flags to track if each RatingBar has been rated
+    private boolean[] isRated = {false, false, false, false, false};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class EvaluetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_evaluet);
         db = FirebaseFirestore.getInstance();
 
-        // Initialize the Image Button and Rating Bars
+
         ImageButton backButton = findViewById(R.id.back_btn);
         ratingBar = findViewById(R.id.ratingBar);
         ratingBar1 = findViewById(R.id.ratingBar1);
@@ -52,10 +52,7 @@ public class EvaluetActivity extends AppCompatActivity {
         Log.d("EvaluetActivity", "averageNumberTextView initialized");
 
         EditText editText4 = findViewById(R.id.edittext4);
-        // Initialize the TextView for average rating
 
-
-        // Listener to check rating changes and calculate average when all are rated
         RatingBar.OnRatingBarChangeListener listener = new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {

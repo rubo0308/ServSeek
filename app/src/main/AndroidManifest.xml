@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SERVSEEK"
         tools:targetApi="31">
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/logotip"/>
+        <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/light_gray"/>
+
 
         <activity
             android:name=".SplashActivity"

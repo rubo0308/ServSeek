@@ -40,20 +40,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginBottom="10dp">
 
 
         <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:id="@+id/your_filter_button_id"
             android:layout_alignBottom="@+id/seach_username_input"
-            android:layout_marginEnd="-4dp"
-            android:layout_marginBottom="-8dp"
+            android:layout_marginEnd="-16dp"
+            android:layout_marginBottom="-3dp"
             android:layout_toStartOf="@+id/seach_username_input"
-            android:src="@drawable/filter_list_24"/>
+            android:src="@drawable/filter_list_24" />
 
         <EditText
             android:id="@+id/seach_username_input"
@@ -62,7 +63,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="-30dp"
+            android:layout_marginRight="-10dp"
             android:layout_marginBottom="10dp"
             android:layout_toLeftOf="@id/search_user_btn"
             android:background="@drawable/edit_text_rounded_corner"

@@ -1,3 +1,4 @@
+
 package com.example.servseek;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -100,9 +102,31 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
             if (!addresses.isEmpty()) {
                 String countryIsoCode = addresses.get(0).getCountryCode(); // ISO country code
                 countryCodePicker.setCountryForNameCode(countryIsoCode);
+                setPhoneNumberLength(countryIsoCode);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void setPhoneNumberLength(String countryIsoCode) {
+        int phoneNumberLength;
+        switch (countryIsoCode) {
+            case "AM": // Armenia
+                phoneNumberLength = 9;
+                break;
+            case "CN": // China
+                phoneNumberLength = 13;
+                break;
+            case "BR": // Brazil
+                phoneNumberLength = 11;
+                break;
+            default:
+                phoneNumberLength = 10; // default length
+                break;
+        }
+        phoneInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(phoneNumberLength)});
+
+    }
+
 }

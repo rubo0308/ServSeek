@@ -41,7 +41,7 @@ public class ProfileFragment extends Fragment {
     EditText usernameInput, phoneInput;
     Button updateProfileBtn;
     ProgressBar progressBar;
-EditText professionInput;
+    EditText professionInput;
     TextView logoutBtn;
     private TextView averageNumberTextView;
     UserModel currentUserModel;    EditText aboutInput; // Add this line
@@ -52,7 +52,7 @@ EditText professionInput;
     private PortfolioAdapter adapter;
     private final int PICK_IMAGE_REQUEST = 1;
     private int currentImagePosition = -1;
-    private int avarage;
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -67,7 +67,7 @@ EditText professionInput;
                         Intent data = result.getData();
                         if (data != null && data.getData() != null) {
                             selectedImageUri = data.getData();
-                            setImageUri(selectedImageUri); // Update the ImageView with the selected image
+                            setImageUri(selectedImageUri);
                         }
                     }
                 });

@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HelpAndSupportActivity extends AppCompatActivity {
-    EditText editTextEmail; // Assuming you have an EditText for email input
+    EditText editTextEmail;
     Button btnSaveEmail;
 
     @Override
@@ -25,7 +25,7 @@ public class HelpAndSupportActivity extends AppCompatActivity {
 
         TextView emailContact = findViewById(R.id.email_contact);
        // Reference to the EditText
-        editTextEmail = findViewById(R.id.inputEmail); // Make sure ID matches in your XML
+        editTextEmail = findViewById(R.id.inputEmail);
         btnSaveEmail = findViewById(R.id.btnSaveEmail);
         ImageButton backButton = findViewById(R.id.back_bn);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -34,7 +34,7 @@ public class HelpAndSupportActivity extends AppCompatActivity {
                 // Finish the activity and return to the previous one
                 finish();
             }
-        });// Make sure ID matches in your XML
+        });
 
         btnSaveEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +45,7 @@ public class HelpAndSupportActivity extends AppCompatActivity {
         emailContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Intent to open email app
+
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
                 emailIntent.setData(Uri.parse("mailto:rubenhalla16@gmail.com"));
                 if (emailIntent.resolveActivity(getPackageManager()) != null) {
@@ -59,35 +59,30 @@ public class HelpAndSupportActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.phone_contact).setOnClickListener(view -> {
-            // Intent to dial phone number
+
             Intent dialIntent = new Intent(Intent.ACTION_DIAL);
             dialIntent.setData(Uri.parse("tel:(123) 456-7890"));
             startActivity(dialIntent);
         });
 
         findViewById(R.id.chat_support_button).setOnClickListener(view -> {
-            // Code to open chat service
+
         });
         Button chatWithSupportButton = findViewById(R.id.chat_support_button);
         chatWithSupportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Intent to open email app directed to your Gmail
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:rubenhalla16@gmail.com"));
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Support Request"); // Pre-fill the subject line
-                // Add more extras here if you want to pre-fill other fields
 
-                // Verify that the intent will resolve to an activity
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
                 } else {
-                    // If no app can handle the intent, inform the user
                     Toast.makeText(HelpAndSupportActivity.this,
                             "No email app installed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        // Handle other contact options similarly
     }
     private void saveEmail() {
         String email = editTextEmail.getText().toString().trim();
