@@ -44,14 +44,16 @@ public class EvaluetActivity extends AppCompatActivity {
         ratingBar2 = findViewById(R.id.ratingBar2);
         ratingBar3 = findViewById(R.id.ratingBar3);
         ratingBar4 = findViewById(R.id.ratingBar4);
-        EditText editText = findViewById(R.id.edittext);
-        EditText editText1 = findViewById(R.id.edittext1);
-        EditText editText2 = findViewById(R.id.edittext2);
-        EditText editText3 = findViewById(R.id.edittext3);
+        TextView textView = findViewById(R.id.textview);
+        TextView textView1 = findViewById(R.id.textview1);
+        TextView textView2 = findViewById(R.id.textview2);
+
+        TextView textView3 = findViewById(R.id.TextView3);
+
         TextView averageNumberTextView = findViewById(R.id.averageNumberTextView);
         Log.d("EvaluetActivity", "averageNumberTextView initialized");
 
-        EditText editText4 = findViewById(R.id.edittext4);
+        TextView textView4 = findViewById(R.id.textView4);
 
         RatingBar.OnRatingBarChangeListener listener = new RatingBar.OnRatingBarChangeListener() {
             @Override

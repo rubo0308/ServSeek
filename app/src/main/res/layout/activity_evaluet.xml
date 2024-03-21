@@ -43,14 +43,14 @@
 
         </RelativeLayout>
 
-        <EditText
-            android:id="@+id/edittext"
+        <TextView
+            android:id="@+id/textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|start"
-            android:hint="Enter text here..."
-            android:inputType="textMultiLine"
-            android:maxLines="2"
+            android:text="                       Quality"
+            android:textSize="28dp"
+
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -59,58 +59,57 @@
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/edittext"
+            app:layout_constraintTop_toBottomOf="@id/textview"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <EditText
-            android:id="@+id/edittext1"
+        <TextView
+            android:id="@+id/textview1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|start"
-            android:hint="Enter text here..."
-            android:inputType="textMultiLine"
-            android:maxLines="2"
+            android:text="                        Money "
+            android:textSize="28dp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
 
         <RatingBar
             android:id="@+id/ratingBar1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/edittext1"
+            app:layout_constraintTop_toBottomOf="@id/textview1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
-        <EditText
-            android:id="@+id/edittext2"
+        <TextView
+            android:id="@+id/textview2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|start"
-            android:hint="Enter text here..."
-            android:inputType="textMultiLine"
-            android:maxLines="2"
+            android:text="                         Time "
+            android:textSize="28dp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
 
         <RatingBar
             android:id="@+id/ratingBar2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/edittext2"
+            app:layout_constraintTop_toBottomOf="@id/textview2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <EditText
-            android:id="@+id/edittext3"
+        <TextView
+            android:id="@+id/TextView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|start"
-            android:hint="Enter text here..."
-            android:inputType="textMultiLine"
-            android:maxLines="2"
+            android:hint="               Communication"
+            android:textSize="28dp"
+
             app:layout_constraintTop_toBottomOf="@id/ratingBar2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -119,21 +118,21 @@
             android:id="@+id/ratingBar3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/edittext3"
+            app:layout_constraintTop_toBottomOf="@id/TextView3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <EditText
-            android:id="@+id/edittext4"
+        <TextView
+            android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|start"
-            android:hint="Enter text here..."
-            android:inputType="textMultiLine"
-            android:maxLines="2"
+            android:hint="               Attitude to work"
+           android:textSize="28dp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
 
         <RatingBar
             android:id="@+id/ratingBar4"
@@ -143,8 +142,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edittext4"
-            app:layout_constraintVertical_bias="0.079" />
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/averageNumberTextView"

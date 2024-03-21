@@ -114,6 +114,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rounded_corner"
             android:text="Let me in"
+            android:textColor="@color/white"
             android:id="@+id/login_let_me_in_btn"/>
         <ProgressBar
             android:layout_width="32dp"

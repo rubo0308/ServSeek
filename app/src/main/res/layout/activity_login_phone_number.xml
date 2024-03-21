@@ -123,6 +123,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rounded_corner"
             android:text="@string/send_otp"
+            android:textColor="@color/white"
             android:id="@+id/send_otp_btn"/>
         <ProgressBar
             android:layout_width="32dp"

@@ -11,14 +11,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:layout_margin="10dp">
-        <Button
-            android:id="@+id/evaluateButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/btn_rounded_corner"
-            android:text="Evaluate"
-            android:layout_marginTop="8dp" />
+
         <TextView
             android:id="@+id/averageNumberTextView"
             android:layout_width="wrap_content"
@@ -40,6 +33,16 @@
             android:scaleType="centerCrop"
             android:src="@drawable/baseline_person_24" />
 
+        <Button
+            android:id="@+id/evaluateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/btn_rounded_corner"
+            android:textColor="@color/white"
+            android:text="Evaluate" />
+
         <EditText
             android:id="@+id/editTextName"
             android:layout_width="match_parent"
@@ -58,24 +61,13 @@
             android:layout_marginBottom="16dp" />
 
 
-
-        <Button
-            android:id="@+id/profle_update_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/btn_rounded_corner"
-            android:text="Update profile" />
-
         <EditText
             android:id="@+id/profile_prof"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="Enter profesion"
-            android:inputType="textPersonName"
-            android:layout_marginBottom="8dp" />
-
-
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/profile_phone"
@@ -86,6 +78,17 @@
             android:background="@drawable/edit_text_rounded_corner"
             android:enabled="false"
             android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/profle_update_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_rounded_corner"
+            android:textColor="@color/white"
+
+            android:text="Update profile" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

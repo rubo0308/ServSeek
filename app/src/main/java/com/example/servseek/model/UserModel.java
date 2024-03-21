@@ -16,13 +16,14 @@ public class UserModel {
     private String fcmToken;
 
     private String name;
+    private String displayName;
 
 
     private String about;
    private String imageUrl;
 
     private List<String> portfolio;
-    private String comment;
+
     private String id;
     private String email;
 
@@ -140,11 +141,11 @@ public class UserModel {
         this.averageRating = averageRating;
     }
 
-    public String getComment() {
-        return comment;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }

@@ -115,6 +115,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rounded_corner"
             android:text="NEXT"
+            android:textColor="@color/white"
             android:id="@+id/login_next_btn"/>
         <ProgressBar
             android:layout_width="32dp"
