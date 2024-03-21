@@ -28,6 +28,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="profesion"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:id="@+id/profesion_text"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/_000000000000"
             android:id="@+id/phone_text"/>
     </LinearLayout>
