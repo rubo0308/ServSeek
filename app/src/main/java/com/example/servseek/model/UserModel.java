@@ -19,9 +19,10 @@ public class UserModel {
 
 
     private String about;
-   private String imageUrl; // Image URL field added
+   private String imageUrl;
 
     private List<String> portfolio;
+    private String comment;
     private String id;
     private String email;
 
@@ -139,4 +140,11 @@ public class UserModel {
         this.averageRating = averageRating;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }

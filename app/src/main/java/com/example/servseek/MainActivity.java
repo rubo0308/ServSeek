@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     ImageButton searchButton;
 
-    SearchFragment searchFragment;
+
     ProfileFragment profileFragment;
     HomeFragment homeFragment;
     SettingsFragment settingsFragment;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        searchFragment = new SearchFragment();
+
         profileFragment = new ProfileFragment();
         homeFragment = new HomeFragment();
         settingsFragment = new SettingsFragment();
@@ -42,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.menu_home) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, homeFragment).commit();
-                }
-                if (item.getItemId() == R.id.menu_search) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, searchFragment).commit();
                 }
                 if (item.getItemId() == R.id.menu_profile) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, profileFragment).commit();
