@@ -7,8 +7,6 @@
     tools:context=".NotificationsActivity"
     tools:ignore="ExtraText">
 
-
-
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -37,32 +35,29 @@
             android:textColor="@color/white"
             android:textSize="32sp" />
 
-
-
     </RelativeLayout>
+
 
     <Switch
         android:id="@+id/switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="540dp"
-        android:padding="1.dp"
+        android:layout_marginTop="16dp"
+        android:padding="1dp"
         android:showText="true"
         android:thumb="@drawable/custom_thumb"
         android:track="@drawable/custom_track"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.803"
+        app:layout_constraintHorizontal_bias="0.646"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switch_description"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/switch_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-
         android:padding="20dp"
         android:text="Toggle this switch to enable or disable management options."
         android:textColor="#656565"
@@ -76,13 +71,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="Notifications"
         android:textColor="#000"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/switch1"
         app:layout_constraintHorizontal_bias="0.35"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switch_description" />
 
@@ -90,14 +84,13 @@
         android:id="@+id/label_notification_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:text="Notification is off"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.881"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch1" /> <!-- Default text -->
         android:textColor="#000"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.772"
         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/label_manage" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,13 @@ public class FirebaseUtil {
     public static String currentUserId() {
         return FirebaseAuth.getInstance().getUid();
     }
+    public static void updateUserProfession(String profession) {
+        if (isLoggedIn()) {
+            currentUserDetails().update("profession", profession)
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "User profession updated successfully."))
+                    .addOnFailureListener(e -> Log.e(TAG, "Error updating user profession.", e));
+        }
+    }
 
 
     public static boolean isLoggedIn() {

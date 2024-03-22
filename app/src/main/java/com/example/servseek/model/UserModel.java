@@ -11,6 +11,8 @@ public class UserModel {
     private float averageRating;
 
     private String profession;
+    private boolean notificationEnabled;
+
     private Timestamp createdTimestamp;
     private String userId;
     private String fcmToken;
@@ -38,6 +40,15 @@ public class UserModel {
         this.username = username;
         this.createdTimestamp = createdTimestamp;
         this.userId = userId;
+
+    }
+
+    public boolean isNotificationEnabled() {
+        return notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
     }
 
     public String getPhone() {
@@ -107,13 +118,13 @@ public class UserModel {
     }
 
 
-   /* public String getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }*/
+    }
 
     public List<String> getPortfolio() {
         return portfolio;

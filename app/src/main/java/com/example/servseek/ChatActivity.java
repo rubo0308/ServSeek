@@ -215,10 +215,8 @@ public class ChatActivity extends AppCompatActivity {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response);
                 } else {
-                    // Handle successful response
                     String responseData = response.body().string();
                     System.out.println("Response from FCM: " + responseData);
-                    // Additional logic to handle the response appropriately
                 }
             }
         });

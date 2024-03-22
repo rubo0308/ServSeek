@@ -23,6 +23,8 @@ public class LoginUsernameActivity extends AppCompatActivity {
     ProgressBar progressBar;
     String phoneNumber;
     UserModel userModel;
+   EditText professionInput;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
         usernameInput = findViewById(R.id.login_username);
         letMeInBtn = findViewById(R.id.login_let_me_in_btn);
         progressBar =findViewById(R.id.login_progress_bar);
-
+        professionInput = findViewById(R.id.login_profession);
         phoneNumber = getIntent().getExtras().getString("phone");
         getUsername();
 
@@ -42,31 +44,39 @@ public class LoginUsernameActivity extends AppCompatActivity {
 
     private void setUsername() {
         String username = usernameInput.getText().toString();
-        if(username.isEmpty() || username.length()<3){
+        String profession = professionInput.getText().toString();
+        if(username.isEmpty() || username.length() < 3) {
             usernameInput.setError("Username length should be at least 3 chars");
             return;
         }
         setInProgress(true);
-        if(userModel!=null){
+        if(userModel != null) {
             userModel.setUsername(username);
-        }else{
-            userModel = new UserModel(phoneNumber,username,Timestamp.now(),FirebaseUtil.currentUserId());
-
+            userModel.setProfession(profession);
+        } else {
+            // If userModel is null, create a new one
+            userModel = new UserModel(phoneNumber, username, Timestamp.now(), FirebaseUtil.currentUserId());
+            userModel.setProfession(profession);
         }
         FirebaseUtil.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 setInProgress(false);
-                if(task.isSuccessful()){
-                    Intent intent = new Intent(LoginUsernameActivity.this,MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
+                if(task.isSuccessful()) {
+                    Intent intent = new Intent(LoginUsernameActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                } else {
+                    // Handle the error
+                    // For example, show a Toast or update the UI
                 }
             }
         });
-
-
     }
+
+
+
+
 
     private void getUsername() {
         setInProgress(true);
@@ -78,6 +88,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
                  userModel =    task.getResult().toObject(UserModel.class);
                     if(userModel!=null){
                         usernameInput.setText(userModel.getUsername());
+                        professionInput.setText(userModel.getProfession());
                     }
                 }
             }

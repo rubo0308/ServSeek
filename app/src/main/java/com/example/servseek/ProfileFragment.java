@@ -1,3 +1,4 @@
+
 package com.example.servseek;
 
 import android.app.Activity;
@@ -35,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
+
 public class ProfileFragment extends Fragment {
 
     ImageView profilePic;
@@ -44,7 +46,10 @@ public class ProfileFragment extends Fragment {
     EditText professionInput;
     TextView logoutBtn;
     private TextView averageNumberTextView;
-    UserModel currentUserModel;    EditText aboutInput; // Add this line
+    UserModel currentUserModel;
+    EditText aboutInput;
+    float currentAverageRating = 0;
+    int numberOfRatings = 0;
 
     ActivityResultLauncher<Intent> imagePickLauncher;
     Uri selectedImageUri;
@@ -52,7 +57,6 @@ public class ProfileFragment extends Fragment {
     private PortfolioAdapter adapter;
     private final int PICK_IMAGE_REQUEST = 1;
     private int currentImagePosition = -1;
-
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -71,7 +75,6 @@ public class ProfileFragment extends Fragment {
                         }
                     }
                 });
-
     }
 
     @Override
@@ -91,23 +94,30 @@ public class ProfileFragment extends Fragment {
         professionInput = view.findViewById(R.id.profile_prof);
 
 
+        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(task2 -> {
+            setInProgress(false);
+            if (task2.isSuccessful() && task2.getResult() != null) {
+                currentUserModel = task2.getResult().toObject(UserModel.class);
+                if (currentUserModel != null) {
+                    professionInput.setText(currentUserModel.getProfession());
+                }
+            }
+        });
+
         getUserData();
 
-        logoutBtn.setOnClickListener((v)->{
+        logoutBtn.setOnClickListener((v) -> {
             FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         FirebaseUtil.logout();
-                        Intent intent = new Intent(getContext(),SplashActivity.class);
+                        Intent intent = new Intent(getContext(), SplashActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
                 }
             });
-
-
-
         });
 
         profilePic.setOnClickListener((v) -> ImagePicker.with(this)
@@ -178,7 +188,7 @@ public class ProfileFragment extends Fragment {
                     // Fetch image URLs from Firebase Storage
                     for (String imageUrl : portfolio) {
                         FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl).getDownloadUrl()
-                                   .addOnSuccessListener(uri -> {
+                                .addOnSuccessListener(uri -> {
                                     adapter.addImageUri(uri.toString());
                                 });
                     }
@@ -189,8 +199,6 @@ public class ProfileFragment extends Fragment {
 
     void updateBtnClick() {
         String profession = professionInput.getText().toString();
-
-
         String newUsername = usernameInput.getText().toString();
         String aboutText = aboutInput.getText().toString();
 
@@ -248,12 +256,14 @@ public class ProfileFragment extends Fragment {
                                 usernameInput.setText(currentUserModel.getUsername());
                                 phoneInput.setText(currentUserModel.getPhone());
                                 aboutInput.setText(currentUserModel.getAbout());
+                                professionInput.setText(currentUserModel.getProfession());
                                 averageNumberTextView.setText(String.valueOf(currentUserModel.getAverageRating()));
                             }
                         }
                     });
                 });
     }
+
 
     void setInProgress(boolean inProgress) {
         progressBar.setVisibility(inProgress ? View.VISIBLE : View.GONE);

@@ -16,7 +16,6 @@ public class SettingsFragment extends Fragment {
     TextView logoutButton;
     TextView helpSupportButton;
     TextView notificationsButton; // Add this line
-// Reference for the help and support button
 
     public SettingsFragment() {
         // Required empty public constructor
