@@ -86,6 +86,14 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioAdapter.View
         }
     }
 
+    public void updatePortfolio(List<String> portfolio) {
+        this.imageUrls.clear();
+        if (portfolio != null) {
+            this.imageUrls.addAll(portfolio);
+        }
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 

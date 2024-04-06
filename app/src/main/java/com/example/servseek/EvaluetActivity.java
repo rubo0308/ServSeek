@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class EvaluetActivity extends AppCompatActivity {
     private FirebaseFirestore db;
-
+    private String userId;
 
     private RatingBar ratingBar, ratingBar1, ratingBar2, ratingBar3, ratingBar4;
     private boolean[] isRated = {false, false, false, false, false};
@@ -55,6 +55,12 @@ public class EvaluetActivity extends AppCompatActivity {
 
         TextView textView4 = findViewById(R.id.textView4);
 
+
+
+        userId = getIntent().getStringExtra("userId");
+
+
+
         RatingBar.OnRatingBarChangeListener listener = new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -80,7 +86,6 @@ public class EvaluetActivity extends AppCompatActivity {
             }
         };
 
-        // Set the listener to all the RatingBars
         ratingBar.setOnRatingBarChangeListener(listener);
         ratingBar1.setOnRatingBarChangeListener(listener);
         ratingBar2.setOnRatingBarChangeListener(listener);
@@ -100,7 +105,7 @@ public class EvaluetActivity extends AppCompatActivity {
                     Log.d("EvaluetActivity", "Average Rating set to TextView: " + averageRatingText);
                     System.out.println("LINE 98");
                 }
-                // Finish the activity and return to the previous one
+
                 finish();
             }
         });
@@ -129,11 +134,13 @@ public class EvaluetActivity extends AppCompatActivity {
         Intent intent = new Intent(EvaluetActivity.this, SearchUserRecyclerAdapter.class);
         intent.putExtra("average_rating", averageRating);
         startActivity(intent);
+        finish();
     }
+
 
     private void saveRatingToFirebase(float averageRating) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String userId = FirebaseUtil.currentUserId();
+
         System.out.println("User ID: " + userId);
         if (userId != null) {
             Map<String, Object> ratingData = new HashMap<>();

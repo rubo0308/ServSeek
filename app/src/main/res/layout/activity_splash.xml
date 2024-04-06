@@ -1,41 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/my_use"
+    android:background="@color/white"
     tools:context=".SplashActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="0dp"
-        android:gravity="center"
-        android:orientation="vertical">
-
-
-        <ImageView
-            android:layout_width="250dp"
-            android:layout_height="160dp"
-            android:src="@drawable/logo_trial" />
-
-        <ProgressBar
-            android:layout_width="32dp"
-            android:layout_height="wrap_content" />
-
-
-    </LinearLayout>
-
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/animatedTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/developed_by_ruben_hakobyan"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:layout_marginBottom="20dp"
-        android:textColor="@color/off_white"/>
 
+        android:textColor="@color/my_primary"
+        android:textSize="24sp"
 
-</RelativeLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.743" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

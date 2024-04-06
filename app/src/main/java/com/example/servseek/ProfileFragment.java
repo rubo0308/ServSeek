@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.example.servseek.adapter.PortfolioAdapter;
 import com.example.servseek.model.UserModel;
 import com.example.servseek.utils.AndroidUtil;
@@ -71,6 +76,7 @@ public class ProfileFragment extends Fragment {
                         Intent data = result.getData();
                         if (data != null && data.getData() != null) {
                             selectedImageUri = data.getData();
+                            AndroidUtil.setProfilePic(getContext(),selectedImageUri,profilePic);
                             setImageUri(selectedImageUri);
                         }
                     }
@@ -83,7 +89,8 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Initialize views
-        profilePic = view.findViewById(R.id.profile_image_view);
+
+
         usernameInput = view.findViewById(R.id.editTextName);
         phoneInput = view.findViewById(R.id.profile_phone);
         aboutInput = view.findViewById(R.id.editTextProfessionalDescription);
@@ -92,6 +99,17 @@ public class ProfileFragment extends Fragment {
         logoutBtn = view.findViewById(R.id.logout_btn);
         averageNumberTextView = view.findViewById(R.id.averageNumberTextView);
         professionInput = view.findViewById(R.id.profile_prof);
+        profilePic = view.findViewById(R.id.profile_image_view);
+        profilePic.setOnClickListener((v) -> {
+            Intent intent = new Intent(getContext(), OtherUserActivity.class);
+            // Check if you have an image URI to pass
+            if (selectedImageUri != null) {
+                intent.putExtra("profileImageUri", selectedImageUri.toString());
+            } else if (currentUserModel != null && currentUserModel.getImageUrl() != null) {
+                intent.putExtra("profileImageUri", currentUserModel.getImageUrl());
+            }
+            startActivity(intent);
+        });
 
 
         FirebaseUtil.currentUserDetails().get().addOnCompleteListener(task2 -> {
@@ -138,9 +156,9 @@ public class ProfileFragment extends Fragment {
 
         updateProfileBtn.setOnClickListener(v -> updateBtnClick());
 
-        Button evaluateButton = view.findViewById(R.id.evaluateButton);
-        evaluateButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), EvaluetActivity.class);
+      Button evaluateButton = view.findViewById(R.id.evaluateButton);
+     evaluateButton.setOnClickListener(v -> {
+           Intent intent = new Intent(getActivity(), EvaluetActivity.class);
             startActivity(intent);
         });
 
@@ -185,12 +203,13 @@ public class ProfileFragment extends Fragment {
             if (documentSnapshot.exists()) {
                 List<String> portfolio = documentSnapshot.toObject(UserModel.class).getPortfolio();
                 if (portfolio != null && !portfolio.isEmpty()) {
-                    // Fetch image URLs from Firebase Storage
                     for (String imageUrl : portfolio) {
-                        FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl).getDownloadUrl()
-                                .addOnSuccessListener(uri -> {
-                                    adapter.addImageUri(uri.toString());
-                                });
+                        if (imageUrl != null && Patterns.WEB_URL.matcher(imageUrl).matches()) {
+                            FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl).getDownloadUrl()
+                                    .addOnSuccessListener(uri -> {
+                                        adapter.addImageUri(uri.toString());
+                                    });
+                        }
                     }
                 }
             }

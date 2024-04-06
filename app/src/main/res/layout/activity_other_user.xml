@@ -5,32 +5,49 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:padding="10dp">
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/icon_back"
+            app:tint="@color/black" />
+
 
         <TextView
             android:id="@+id/averageNumberTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Average Rating: "
-            android:textAppearance="?android:textAppearanceMedium"
             android:drawableStart="@drawable/baseline_star_24"
-            android:drawablePadding="8dp"/>
+            android:drawablePadding="8dp"
+            android:text="Average Rating: "
+            android:textAppearance="?android:textAppearanceMedium" />
 
         <ImageView
             android:id="@+id/profile_image_view"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/circular_bg"
-            android:padding="2dp"
+            android:backgroundTint="@color/my_primary"
             android:scaleType="centerCrop"
-            android:src="@drawable/baseline_person_24"/>
+            android:src="@drawable/baseline_person_24" />
+        <Button
+            android:id="@+id/evaluateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/btn_rounded_corner"
+            android:textColor="@color/white"
+            android:text="Evaluate" />
 
         <TextView
             android:id="@+id/editTextName"

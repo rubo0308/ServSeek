@@ -123,13 +123,12 @@ public class FirebaseUtil {
     }
 
     public static Task<DocumentSnapshot> getUserById(String userId) {
-        // Get an instance of Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Get a reference to the "users" collection and then the document for the given userId
+
         DocumentReference userDocRef = db.collection("users").document(userId);
 
-        // Return the Task obtained by getting the document. This allows calling code to add a listener to process the document snapshot.
+
         return userDocRef.get();
     }
 }

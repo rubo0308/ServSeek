@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener((v) -> {
             startActivity(new Intent(MainActivity.this, SearchUserActivity.class));
         });
+
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

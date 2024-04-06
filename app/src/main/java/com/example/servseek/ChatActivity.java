@@ -69,11 +69,7 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.chat_recycler_view);
         imagebutton = findViewById(R.id.profile_pic_layout);
 
-        imagebutton.setOnClickListener(v -> {
-            Intent intent = new Intent(ChatActivity.this, OtherUserActivity.class);
-            intent.putExtra("userId", otherUser.getUserId());
-            startActivity(intent);
-        });
+
 
 
         backBtn.setOnClickListener((v) -> {

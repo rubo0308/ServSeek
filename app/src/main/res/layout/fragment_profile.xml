@@ -47,7 +47,7 @@
             android:id="@+id/editTextName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Name"
+            android:hint="Enter Professon"
             android:inputType="textPersonName"
             android:layout_marginBottom="8dp" />
 
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:hint="Enter profesion"
+            android:hint="Enter Name"
             android:inputType="textPersonName" />
 
         <EditText
@@ -90,10 +90,10 @@
             android:text="Update profile" />
 
         <TextView
+            android:id="@+id/logout_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Logout"
-            android:id="@+id/logout_btn"/>
+            android:text="Logout" />
 
         <TextView
             android:id="@+id/portfolioLabel"

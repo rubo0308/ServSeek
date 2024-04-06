@@ -47,10 +47,9 @@
             android:id="@+id/textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top|start"
-            android:text="                       Quality"
+            android:gravity="center"
+            android:text="Quality"
             android:textSize="28dp"
-
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -67,8 +66,8 @@
             android:id="@+id/textview1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top|start"
-            android:text="                        Money "
+            android:gravity="center"
+            android:text="Money"
             android:textSize="28dp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,8 +85,8 @@
             android:id="@+id/textview2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top|start"
-            android:text="                         Time "
+            android:gravity="center"
+            android:text="Time"
             android:textSize="28dp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar1"
             app:layout_constraintStart_toStartOf="parent"
@@ -106,8 +105,8 @@
             android:id="@+id/TextView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top|start"
-            android:hint="               Communication"
+            android:gravity="center"
+            android:text="Communication"
             android:textSize="28dp"
 
             app:layout_constraintTop_toBottomOf="@id/ratingBar2"
@@ -126,9 +125,9 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top|start"
-            android:hint="               Attitude to work"
-           android:textSize="28dp"
+            android:gravity="center"
+            android:text="Attitude to work"
+            android:textSize="28dp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -140,7 +139,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4"
             app:layout_constraintVertical_bias="0.0" />
@@ -149,11 +148,11 @@
             android:id="@+id/averageNumberTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ratingBar4"
-            android:layout_centerHorizontal="true"
             android:text="Average Rating: "
             android:textAppearance="?android:textAppearanceMedium"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBar4"
-            tools:layout_editor_absoluteX="141dp" />
+            app:layout_constraintTop_toBottomOf="@id/ratingBar4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

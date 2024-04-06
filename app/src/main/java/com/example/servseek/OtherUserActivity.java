@@ -1,86 +1,142 @@
 package com.example.servseek;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.servseek.adapter.PortfolioAdapter;
 import com.example.servseek.model.UserModel;
+import com.example.servseek.utils.AndroidUtil;
 import com.example.servseek.utils.FirebaseUtil;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class OtherUserActivity extends AppCompatActivity {
     ImageView profilePic;
-    TextView usernameInput, professionInput, phoneInput, aboutInput, averageNumberTextView, logoutBtn;
+    UserModel otherUser;
+    String chatroomId;
+    TextView usernameTextView, professionTextView, phoneTextView, aboutTextView, averageRatingTextView;
     ProgressBar progressBar;
     RecyclerView portfolioRecyclerView;
     UserModel otherUserModel;
-
     private PortfolioAdapter adapter;
+
+    // A unique request code to identify the activity result
+    private static final int EVALUATE_USER_REQUEST = 1;
+    // Variable to hold the user ID being viewed
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_other_user); // This layout is assumed to be identical to your fragment's layout
+        setContentView(R.layout.activity_other_user);
 
         initializeViews();
-        String userId = getIntent().getStringExtra("userId");
-        if (userId != null && !userId.isEmpty()) {
-            fetchUserData(userId);
-        } else {
-            finish(); // Finish activity if no user ID is provided, or handle this case as needed
-        }
+        handleIntentExtras();
     }
 
     private void initializeViews() {
+        otherUser = AndroidUtil.getUserModelFromIntent(getIntent());
+        chatroomId = FirebaseUtil.getChatroomId(FirebaseUtil.currentUserId(), otherUser.getUserId());
         profilePic = findViewById(R.id.profile_image_view);
-        usernameInput = findViewById(R.id.editTextName);
-        phoneInput = findViewById(R.id.profile_phone);
-        professionInput = findViewById(R.id.profile_prof);
-        aboutInput = findViewById(R.id.editTextProfessionalDescription);
-        averageNumberTextView = findViewById(R.id.averageNumberTextView);
-        logoutBtn = findViewById(R.id.logout_btn); // You might want to hide or remove this if not applicable
+        usernameTextView = findViewById(R.id.editTextName);
+        phoneTextView = findViewById(R.id.profile_phone);
+        professionTextView = findViewById(R.id.profile_prof);
+        aboutTextView = findViewById(R.id.editTextProfessionalDescription);
+        averageRatingTextView = findViewById(R.id.averageNumberTextView);
         progressBar = findViewById(R.id.profile_progress_bar);
         portfolioRecyclerView = findViewById(R.id.portfolioRecyclerView);
 
-        adapter = new PortfolioAdapter(this, null); // Assuming PortfolioAdapter can be initialized this way
         portfolioRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        adapter = new PortfolioAdapter(this, imageUri -> {});
         portfolioRecyclerView.setAdapter(adapter);
+
+        Button evaluateButton = findViewById(R.id.evaluateButton);
+        evaluateButton.setOnClickListener(v -> {
+            // Ensure userId is not null or empty before proceeding
+            if (userId != null && !userId.isEmpty()) {
+                Intent intent = new Intent(OtherUserActivity.this, EvaluetActivity.class);
+                intent.putExtra("userId", otherUser.getUserId());
+                startActivity(intent);
+            }
+        });
+
+        ImageButton backButton = findViewById(R.id.back_btn);
+        backButton.setOnClickListener(view -> finish());
+    }
+
+    private void handleIntentExtras() {
+        userId = getIntent().getStringExtra("userId");
+        String imageUriStr = getIntent().getStringExtra("profileImageUri");
+
+        if (imageUriStr != null && !imageUriStr.isEmpty()) {
+            Uri imageUri = Uri.parse(imageUriStr);
+            Glide.with(this).load(imageUri).into(profilePic);
+        }
+
+        if (userId != null && !userId.isEmpty()) {
+            fetchUserData(userId);
+        } else {
+            finish();
+        }
     }
 
     private void fetchUserData(String userId) {
-        progressBar.setVisibility(ProgressBar.VISIBLE);
-        FirebaseUtil.getUserById(userId).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                progressBar.setVisibility(ProgressBar.GONE);
-                if (task.isSuccessful() && task.getResult() != null) {
-                    UserModel user = task.getResult().toObject(UserModel.class);
-                    if (user != null) {
-                        updateUIWithUserData(user);
-                    }
-                } else {
-                    // Handle error
+        progressBar.setVisibility(View.VISIBLE);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).get().addOnCompleteListener(task -> {
+            progressBar.setVisibility(View.GONE);
+            if (task.isSuccessful() && task.getResult() != null) {
+                otherUserModel = task.getResult().toObject(UserModel.class);
+                if (otherUserModel != null) {
+                    updateUIWithUserData(otherUserModel);
+
+                    // Fetch the profile picture from Firebase Storage
+                    FirebaseUtil.getOtherProfilePicStorageRef(userId).getDownloadUrl().addOnSuccessListener(uri -> {
+                        // Load the image into the ImageView using Glide
+                        Glide.with(OtherUserActivity.this).load(uri).into(profilePic);
+                    }).addOnFailureListener(e -> {
+                        // Handle any errors
+                    });
                 }
+            } else {
+
             }
         });
     }
 
+
     private void updateUIWithUserData(UserModel user) {
-        // Set user information to views
-        usernameInput.setText(user.getUsername());
-        phoneInput.setText(user.getPhone());
-        professionInput.setText(user.getProfession());
-        aboutInput.setText(user.getAbout());
-        averageNumberTextView.setText(String.valueOf(user.getAverageRating()));
-        // Update portfolio RecyclerView and profile picture as needed
+        usernameTextView.setText(user.getUsername());
+        phoneTextView.setText(user.getPhone());
+        professionTextView.setText(user.getProfession());
+        aboutTextView.setText(user.getAbout());
+        averageRatingTextView.setText(String.valueOf(user.getAverageRating()));
+
+        if (profilePic.getDrawable() == null && user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+            Glide.with(this).load(user.getImageUrl()).into(profilePic);
+        }
+
+        if (user.getPortfolio() != null && !user.getPortfolio().isEmpty()) {
+            adapter.updatePortfolio(user.getPortfolio());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EVALUATE_USER_REQUEST && resultCode == RESULT_OK && data != null) {
+            // Code to handle the activity result
+        }
     }
 }

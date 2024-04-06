@@ -35,7 +35,7 @@ public class FCMNotificationService extends FirebaseMessagingService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setSmallIcon(R.drawable.ic_notification) // Ensure you have a notification icon in your drawable resources
+                .setSmallIcon(R.drawable.ic_notification) 
                 .setAutoCancel(true);
 
         notificationManager.notify(101, builder.build());
