@@ -2,9 +2,10 @@ package com.example.servseek.model;
 
 import com.google.firebase.Timestamp;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class UserModel {
+public class UserModel implements Serializable {
     private String phone;
     private String username;
 

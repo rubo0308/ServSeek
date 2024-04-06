@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/averageNumberTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average Rating: "
+            android:textAppearance="?android:textAppearanceMedium"
+            android:drawableStart="@drawable/baseline_star_24"
+            android:drawablePadding="8dp"/>
+
+        <ImageView
+            android:id="@+id/profile_image_view"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/circular_bg"
+            android:padding="2dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/baseline_person_24"/>
+
+        <TextView
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="8dp"
+            android:enabled="false"/>
+
+        <TextView
+            android:id="@+id/editTextProfessionalDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="About"
+            android:inputType="textMultiLine"
+            android:layout_marginBottom="16dp"
+            android:enabled="false"/>
+
+        <TextView
+            android:id="@+id/profile_prof"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Profession"
+            android:inputType="text"
+            android:layout_marginBottom="8dp"
+            android:enabled="false"/>
+
+        <TextView
+            android:id="@+id/profile_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone"
+            android:inputType="phone"
+            android:layout_marginBottom="16dp"
+            android:enabled="false"/>
+
+        <TextView
+            android:id="@+id/portfolioLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Portfolio"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:layout_marginBottom="8dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/portfolioRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"/>
+
+        <ProgressBar
+            android:id="@+id/profile_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"/>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

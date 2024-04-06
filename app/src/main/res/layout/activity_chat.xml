@@ -25,13 +25,14 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-        <include layout="@layout/profile_pic_view"
+        <ImageButton
+            android:id="@+id/profile_pic_layout"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginStart="10dp"
+            android:src="@drawable/baseline_person_24"
             android:layout_toRightOf="@id/back_btn"
-            android:id="@+id/profile_pic_layout"
-            />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/white" />
 
         <ImageButton
             android:layout_width="50dp"
@@ -90,7 +91,5 @@
             />
 
     </RelativeLayout>
-
-
 
 </RelativeLayout>

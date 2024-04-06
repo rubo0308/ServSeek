@@ -51,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
     ImageButton backBtn;
     TextView otherUsername;
     RecyclerView recyclerView;
-    ImageView imageView;
+    ImageButton imagebutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +65,16 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageBtn = findViewById(R.id.message_send_btn);
         backBtn = findViewById(R.id.back_btn);
         otherUsername = findViewById(R.id.other_username);
+
         recyclerView = findViewById(R.id.chat_recycler_view);
-        imageView = findViewById(R.id.profile_pic_image_view);
-        FirebaseUtil.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
-                .addOnCompleteListener(t -> {
-                    if (t.isSuccessful()) {
-                        Uri uri = t.getResult();
-                        AndroidUtil.setProfilePic(this, uri, imageView);
-                    }
-                });
+        imagebutton = findViewById(R.id.profile_pic_layout);
+
+        imagebutton.setOnClickListener(v -> {
+            Intent intent = new Intent(ChatActivity.this, OtherUserActivity.class);
+            intent.putExtra("userId", otherUser.getUserId());
+            startActivity(intent);
+        });
+
 
         backBtn.setOnClickListener((v) -> {
             startActivity(new Intent(ChatActivity.this, MainActivity.class));
