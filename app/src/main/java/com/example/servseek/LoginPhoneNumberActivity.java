@@ -112,17 +112,17 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
     private void setPhoneNumberLength(String countryIsoCode) {
         int phoneNumberLength;
         switch (countryIsoCode) {
-            case "AM": // Armenia
+            case "AM":
                 phoneNumberLength = 9;
                 break;
-            case "CN": // China
+            case "CN":
                 phoneNumberLength = 13;
                 break;
-            case "BR": // Brazil
+            case "BR":
                 phoneNumberLength = 11;
                 break;
             default:
-                phoneNumberLength = 10; // default length
+                phoneNumberLength = 10;
                 break;
         }
         phoneInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(phoneNumberLength)});

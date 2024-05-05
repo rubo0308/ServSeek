@@ -156,11 +156,6 @@ public class ProfileFragment extends Fragment {
 
         updateProfileBtn.setOnClickListener(v -> updateBtnClick());
 
-      Button evaluateButton = view.findViewById(R.id.evaluateButton);
-     evaluateButton.setOnClickListener(v -> {
-           Intent intent = new Intent(getActivity(), EvaluetActivity.class);
-            startActivity(intent);
-        });
 
         return view;
     }

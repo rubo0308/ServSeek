@@ -37,7 +37,7 @@ public class SearchUserActivity extends AppCompatActivity {
         searchInput = findViewById(R.id.seach_username_input);
         searchButton = findViewById(R.id.search_user_btn);
         backButton = findViewById(R.id.back_btn);
-        filterButton = findViewById(R.id.your_filter_button_id); // Ensure this ID matches your layout
+        filterButton = findViewById(R.id.your_filter_button_id);
         recyclerView = findViewById(R.id.search_user_recycler_view);
 
         setupSearchInput();

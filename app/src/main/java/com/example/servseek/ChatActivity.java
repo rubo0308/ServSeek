@@ -3,7 +3,7 @@ package com.example.servseek;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.annotation.NonNull;
+
 
 import android.content.Intent;
 import android.net.Uri;
@@ -26,6 +26,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -70,21 +71,26 @@ public class ChatActivity extends AppCompatActivity {
         imagebutton = findViewById(R.id.profile_pic_layout);
 
 
-
+        imagebutton.setOnClickListener(v -> {
+            Intent intent = new Intent(ChatActivity.this, OtherUserActivity.class);
+            intent.putExtra("userId", otherUser.getUserId());
+            startActivity(intent);
+        });
 
         backBtn.setOnClickListener((v) -> {
             startActivity(new Intent(ChatActivity.this, MainActivity.class));
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, new HomeFragment()).commit();
         });
-        otherUsername.setText(otherUser.getUsername());
-        getOrCreateChatroomModel();
+        otherUsername.setText(getIntent().getStringExtra("username"));
+
         sendMessageBtn.setOnClickListener((v -> {
             String message = messageInput.getText().toString().trim();
             if (message.isEmpty())
                 return;
             sendMessageToUser(message);
         }));
+
 
         getOrCreateChatroomModel();
         setupChatRecyclerView();
@@ -114,6 +120,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
     }
+
 
     void sendMessageToUser(String message) {
         chatroomModel.setLastMessageTimestamp(Timestamp.now());

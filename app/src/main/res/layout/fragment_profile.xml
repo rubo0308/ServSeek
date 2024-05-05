@@ -33,15 +33,6 @@
             android:scaleType="centerCrop"
             android:src="@drawable/baseline_person_24" />
 
-        <Button
-            android:id="@+id/evaluateButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/btn_rounded_corner"
-            android:textColor="@color/white"
-            android:text="Evaluate" />
 
         <EditText
             android:id="@+id/editTextName"

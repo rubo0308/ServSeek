@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servseek.ChatActivity;
@@ -20,6 +20,8 @@ import com.example.servseek.utils.AndroidUtil;
 import com.example.servseek.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatroomModel, RecentChatRecyclerAdapter.ChatroomModelViewHolder> {
 
@@ -83,8 +85,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
                         });
 
                     } else {
-                        // Handle the case where task is not successful or result is null
-                        // Log an error or show a message to the user
+
                     }
                 });
     }

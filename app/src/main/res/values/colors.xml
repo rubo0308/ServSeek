@@ -15,5 +15,7 @@
     <color name="chat_color_receiver">#7CB342</color>
     <color name="dark_green">#033500</color>
     <color name="light_green">#2DFF54</color>
+    <color name="yellow">#FFFF00</color>
+
 
 </resources>

@@ -30,10 +30,9 @@ public class OtherUserActivity extends AppCompatActivity {
     RecyclerView portfolioRecyclerView;
     UserModel otherUserModel;
     private PortfolioAdapter adapter;
+    ImageButton imagebutton;
 
-    // A unique request code to identify the activity result
     private static final int EVALUATE_USER_REQUEST = 1;
-    // Variable to hold the user ID being viewed
     private String userId;
 
     @Override
@@ -60,24 +59,39 @@ public class OtherUserActivity extends AppCompatActivity {
         portfolioRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         adapter = new PortfolioAdapter(this, imageUri -> {});
         portfolioRecyclerView.setAdapter(adapter);
+        imagebutton = findViewById(R.id.chatButton);
 
         Button evaluateButton = findViewById(R.id.evaluateButton);
         evaluateButton.setOnClickListener(v -> {
-            // Ensure userId is not null or empty before proceeding
             if (userId != null && !userId.isEmpty()) {
                 Intent intent = new Intent(OtherUserActivity.this, EvaluetActivity.class);
                 intent.putExtra("userId", otherUser.getUserId());
+
                 startActivity(intent);
             }
         });
 
+
+
+        imagebutton.setOnClickListener(v -> {
+            Intent intent = new Intent(OtherUserActivity.this, ChatActivity.class);
+            intent.putExtra("username", otherUserModel.getUsername());
+            intent.putExtra("userId", otherUser.getUserId());
+            startActivity(intent);
+        });
+
         ImageButton backButton = findViewById(R.id.back_btn);
-        backButton.setOnClickListener(view -> finish());
+        backButton.setOnClickListener(view -> {
+            Intent intent = new Intent(OtherUserActivity.this, SearchUserActivity.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void handleIntentExtras() {
         userId = getIntent().getStringExtra("userId");
         String imageUriStr = getIntent().getStringExtra("profileImageUri");
+
 
         if (imageUriStr != null && !imageUriStr.isEmpty()) {
             Uri imageUri = Uri.parse(imageUriStr);

@@ -22,12 +22,12 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioAdapter.View
     private List<String> imageUrls = new ArrayList<>();
     private LayoutInflater mInflater;
     private Consumer<Integer> onImageClick;
-    private int MAX_ITEMS = 50; // Example limit to the number of items
+    private int MAX_ITEMS = 50;
 
     public PortfolioAdapter(Context context, Consumer<Integer> onImageClick) {
         this.mInflater = LayoutInflater.from(context);
         this.onImageClick = onImageClick;
-        addPlaceholder(); // Initially add a placeholder if the list is empty
+        addPlaceholder();
     }
 
     @NonNull
@@ -62,7 +62,6 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioAdapter.View
         if (imageUrls.size() < MAX_ITEMS) {
             imageUrls.add(imageUrl);
             notifyDataSetChanged();
-            // Update Firebase Database or Firestore with the new image URL
             FirebaseUtil.updatePortfolioImageUrl(imageUrl);
         }
     }

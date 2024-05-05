@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.servseek.ChatActivity;
+import com.example.servseek.OtherUserActivity;
 import com.example.servseek.R;
 import com.example.servseek.model.UserModel;
 import com.example.servseek.utils.AndroidUtil;
@@ -48,8 +50,8 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
                 });
 
         holder.itemView.setOnClickListener(v -> {
-            // Navigate to chat activity
-            Intent intent = new Intent(context, ChatActivity.class);
+
+            Intent intent = new Intent(context, OtherUserActivity.class);
             AndroidUtil.passUserModelAsIntent(intent, model);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
