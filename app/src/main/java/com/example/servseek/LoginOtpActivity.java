@@ -3,15 +3,19 @@ package com.example.servseek;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.servseek.utils.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +41,8 @@ public class LoginOtpActivity extends AppCompatActivity {
     ProgressBar progressBar;
     TextView resendOtpTextView;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    LottieAnimationView lottie ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,9 @@ public class LoginOtpActivity extends AppCompatActivity {
         nextBtn = findViewById(R.id.login_next_btn);
         progressBar = findViewById(R.id.login_progress_bar);
         resendOtpTextView = findViewById(R.id.resend_otp_textview);
+        lottie = findViewById(R.id.lottieAnimationView);
+        setupLottieAnimation();
+
 
         phoneNumber = getIntent().getExtras().getString("phone");
         sendOtp(phoneNumber, false);
@@ -62,6 +71,22 @@ public class LoginOtpActivity extends AppCompatActivity {
             sendOtp(phoneNumber,true);
         });
     }
+
+    private void setupLottieAnimation() {
+        lottie.animate().translationX(2000).setDuration(2000).setStartDelay(2900);
+
+        new Handler().postDelayed(() -> {
+            lottie.animate().translationX(0).setDuration(1000).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    lottie.setProgress(0);
+                    lottie.playAnimation();
+                }
+            }).start();
+        }, 500);
+    }
+
     void sendOtp(String phoneNumber,boolean isResend){
         startResendTimer();
 
