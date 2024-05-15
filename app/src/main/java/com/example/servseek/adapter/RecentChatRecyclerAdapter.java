@@ -58,7 +58,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
                                     lastMessage = lastMessage.substring(0, 15) + "...";
                                 }
                             } else {
-                                lastMessage = "No message"; // Default text if last message is null
+                                lastMessage = "No message";
                             }
 
                             if (lastMessageSentByMe) {
@@ -69,10 +69,8 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
 
                             holder.lastMessageTime.setText(FirebaseUtil.timestampToString(model.getLastMessageTimestamp()));
                         } else {
-                            // Handle null UserModel scenario
                             holder.usernameText.setText("Unknown User");
                             holder.lastMessageText.setText("No message");
-                            // Consider setting a default or placeholder profile picture
                         }
 
                         holder.itemView.setOnClickListener(v -> {

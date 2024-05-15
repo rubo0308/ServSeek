@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
 
     ProfileFragment profileFragment;
     HomeFragment homeFragment;
-    SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         profileFragment = new ProfileFragment();
         homeFragment = new HomeFragment();
-        settingsFragment = new SettingsFragment();
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         searchButton = findViewById(R.id.main_search_btn);
         searchButton.setOnClickListener((v) -> {
@@ -47,9 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.menu_profile) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, profileFragment).commit();
                 }
-                if (item.getItemId() == R.id.menu_settings) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, settingsFragment).commit();
-                }
+
                 return true;
             }
         });

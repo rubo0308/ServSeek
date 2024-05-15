@@ -1,11 +1,9 @@
-
 package com.example.servseek;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -13,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
+import android.widget.ToggleButton;
 import com.example.servseek.adapter.PortfolioAdapter;
 import com.example.servseek.model.UserModel;
 import com.example.servseek.utils.AndroidUtil;
@@ -32,18 +29,17 @@ import com.example.servseek.utils.FirebaseUtil;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.List;
-
+import java.util.Locale;
 
 public class ProfileFragment extends Fragment {
-
+    private FirebaseFirestore db;
+    private String userId;
     ImageView profilePic;
     EditText usernameInput, phoneInput;
     Button updateProfileBtn;
@@ -55,7 +51,7 @@ public class ProfileFragment extends Fragment {
     EditText aboutInput;
     float currentAverageRating = 0;
     int numberOfRatings = 0;
-
+    ToggleButton toggleButton;  // Add ToggleButton
     ActivityResultLauncher<Intent> imagePickLauncher;
     Uri selectedImageUri;
 
@@ -70,13 +66,16 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
+        userId = FirebaseUtil.currentUserId();
+
         imagePickLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         if (data != null && data.getData() != null) {
                             selectedImageUri = data.getData();
-                            AndroidUtil.setProfilePic(getContext(),selectedImageUri,profilePic);
+                            AndroidUtil.setProfilePic(getContext(), selectedImageUri, profilePic);
                             setImageUri(selectedImageUri);
                         }
                     }
@@ -88,8 +87,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Initialize views
-
+        averageNumberTextView = view.findViewById(R.id.averageNumberTextView);
+        fetchAndDisplayAverageRating();
 
         usernameInput = view.findViewById(R.id.editTextName);
         phoneInput = view.findViewById(R.id.profile_phone);
@@ -97,20 +96,19 @@ public class ProfileFragment extends Fragment {
         updateProfileBtn = view.findViewById(R.id.profle_update_btn);
         progressBar = view.findViewById(R.id.profile_progress_bar);
         logoutBtn = view.findViewById(R.id.logout_btn);
-        averageNumberTextView = view.findViewById(R.id.averageNumberTextView);
         professionInput = view.findViewById(R.id.profile_prof);
         profilePic = view.findViewById(R.id.profile_image_view);
-        profilePic.setOnClickListener((v) -> {
-            Intent intent = new Intent(getContext(), OtherUserActivity.class);
-            // Check if you have an image URI to pass
-            if (selectedImageUri != null) {
-                intent.putExtra("profileImageUri", selectedImageUri.toString());
-            } else if (currentUserModel != null && currentUserModel.getImageUrl() != null) {
-                intent.putExtra("profileImageUri", currentUserModel.getImageUrl());
-            }
-            startActivity(intent);
-        });
+        toggleButton = view.findViewById(R.id.toggle_button);
 
+        // Set OnClickListener for profile picture
+        profilePic.setOnClickListener((v) -> ImagePicker.with(this)
+                .cropSquare()
+                .compress(512)
+                .maxResultSize(512, 512)
+                .createIntent(intent -> {
+                    imagePickLauncher.launch(intent);
+                    return null;
+                }));
 
         FirebaseUtil.currentUserDetails().get().addOnCompleteListener(task2 -> {
             setInProgress(false);
@@ -118,6 +116,7 @@ public class ProfileFragment extends Fragment {
                 currentUserModel = task2.getResult().toObject(UserModel.class);
                 if (currentUserModel != null) {
                     professionInput.setText(currentUserModel.getProfession());
+                    toggleButton.setChecked(currentUserModel.isToggleButtonState());  // Set the initial state
                 }
             }
         });
@@ -138,15 +137,6 @@ public class ProfileFragment extends Fragment {
             });
         });
 
-        profilePic.setOnClickListener((v) -> ImagePicker.with(this)
-                .cropSquare()
-                .compress(512)
-                .maxResultSize(512, 512)
-                .createIntent(intent -> {
-                    imagePickLauncher.launch(intent);
-                    return null;
-                }));
-
         RecyclerView portfolioRecyclerView = view.findViewById(R.id.portfolioRecyclerView);
         portfolioRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         adapter = new PortfolioAdapter(getContext(), this::onImageClick);
@@ -156,8 +146,46 @@ public class ProfileFragment extends Fragment {
 
         updateProfileBtn.setOnClickListener(v -> updateBtnClick());
 
+        // ToggleButton listener to save state in Firebase
+        toggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (currentUserModel != null) {
+                currentUserModel.setToggleButtonState(isChecked);
+                FirebaseUtil.currentUserDetails().set(currentUserModel)
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                AndroidUtil.showToast(getContext(), "Failed to update toggle state");
+                            }
+                        });
+            }
+        });
 
         return view;
+    }
+
+    private void fetchAndDisplayAverageRating() {
+        DocumentReference userRef = db.collection("users").document(userId);
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                double total = 0;
+                int count = 0;
+                for (int i = 0; i < 5; i++) { // Assuming 5 rating categories
+                    Double rating = documentSnapshot.getDouble("rating" + i);
+                    if (rating != null) {
+                        total += rating;
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    double average = total / count;
+                    updateAverageRatingDisplay(average);
+                }
+            }
+        }).addOnFailureListener(e -> Log.e("ProfileFragment", "Error fetching ratings", e));
+    }
+
+    private void updateAverageRatingDisplay(double average) {
+        String formattedAverage = String.format(Locale.US, "%.3g", average);
+        averageNumberTextView.setText(String.format(Locale.US, "Average Rating: %s", formattedAverage));
     }
 
     public void onImageClick(int position) {
@@ -272,12 +300,12 @@ public class ProfileFragment extends Fragment {
                                 aboutInput.setText(currentUserModel.getAbout());
                                 professionInput.setText(currentUserModel.getProfession());
                                 averageNumberTextView.setText(String.valueOf(currentUserModel.getAverageRating()));
+                                toggleButton.setChecked(currentUserModel.isToggleButtonState());  // Set the initial state
                             }
                         }
                     });
                 });
     }
-
 
     void setInProgress(boolean inProgress) {
         progressBar.setVisibility(inProgress ? View.VISIBLE : View.GONE);

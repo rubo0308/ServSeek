@@ -13,13 +13,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.servseek.adapter.PortfolioAdapter;
 import com.example.servseek.model.UserModel;
 import com.example.servseek.utils.AndroidUtil;
 import com.example.servseek.utils.FirebaseUtil;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Locale;
 
 public class OtherUserActivity extends AppCompatActivity {
     ImageView profilePic;
@@ -71,8 +72,6 @@ public class OtherUserActivity extends AppCompatActivity {
             }
         });
 
-
-
         imagebutton.setOnClickListener(v -> {
             Intent intent = new Intent(OtherUserActivity.this, ChatActivity.class);
             intent.putExtra("username", otherUserModel.getUsername());
@@ -91,7 +90,6 @@ public class OtherUserActivity extends AppCompatActivity {
     private void handleIntentExtras() {
         userId = getIntent().getStringExtra("userId");
         String imageUriStr = getIntent().getStringExtra("profileImageUri");
-
 
         if (imageUriStr != null && !imageUriStr.isEmpty()) {
             Uri imageUri = Uri.parse(imageUriStr);
@@ -124,18 +122,17 @@ public class OtherUserActivity extends AppCompatActivity {
                     });
                 }
             } else {
-
+                // Handle the error
             }
         });
     }
-
 
     private void updateUIWithUserData(UserModel user) {
         usernameTextView.setText(user.getUsername());
         phoneTextView.setText(user.getPhone());
         professionTextView.setText(user.getProfession());
         aboutTextView.setText(user.getAbout());
-        averageRatingTextView.setText(String.valueOf(user.getAverageRating()));
+        averageRatingTextView.setText(formatAverageRating(user.getAverageRating()));
 
         if (profilePic.getDrawable() == null && user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
             Glide.with(this).load(user.getImageUrl()).into(profilePic);
@@ -144,6 +141,10 @@ public class OtherUserActivity extends AppCompatActivity {
         if (user.getPortfolio() != null && !user.getPortfolio().isEmpty()) {
             adapter.updatePortfolio(user.getPortfolio());
         }
+    }
+
+    private String formatAverageRating(double average) {
+        return String.format(Locale.US, "%.3g", average);
     }
 
     @Override

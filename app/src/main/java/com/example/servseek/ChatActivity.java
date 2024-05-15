@@ -210,18 +210,19 @@ public class ChatActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                // Handle the failure to send the request
-                e.printStackTrace(); // Log the error or handle it as needed
+                e.printStackTrace();
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
+                    String responseBody = response.body().string();
+                    System.out.println("Error response body: " + responseBody);
                 } else {
                     String responseData = response.body().string();
                     System.out.println("Response from FCM: " + responseData);
                 }
+                response.close();
             }
         });
     }

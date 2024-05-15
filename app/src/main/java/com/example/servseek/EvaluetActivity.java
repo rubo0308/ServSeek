@@ -1,35 +1,27 @@
 package com.example.servseek;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.servseek.adapter.SearchUserRecyclerAdapter;
-import com.example.servseek.utils.FirebaseUtil;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class EvaluetActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String userId;
-
-    private RatingBar ratingBar, ratingBar1, ratingBar2, ratingBar3, ratingBar4;
-    private boolean[] isRated = {false, false, false, false, false};
+    private boolean[] isRated;
+    private RatingBar[] ratingBars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,76 +31,126 @@ public class EvaluetActivity extends AppCompatActivity {
 
 
         ImageButton backButton = findViewById(R.id.back_btn);
-        ratingBar = findViewById(R.id.ratingBar);
-        ratingBar1 = findViewById(R.id.ratingBar1);
-        ratingBar2 = findViewById(R.id.ratingBar2);
-        ratingBar3 = findViewById(R.id.ratingBar3);
-        ratingBar4 = findViewById(R.id.ratingBar4);
-        TextView textView = findViewById(R.id.textview);
-        TextView textView1 = findViewById(R.id.textview1);
-        TextView textView2 = findViewById(R.id.textview2);
+        ratingBars = new RatingBar[]{
+                findViewById(R.id.ratingBar),
+                findViewById(R.id.ratingBar1),
+                findViewById(R.id.ratingBar2),
+                findViewById(R.id.ratingBar3),
+                findViewById(R.id.ratingBar4)
+        };
 
-        TextView textView3 = findViewById(R.id.TextView3);
+        isRated = new boolean[ratingBars.length];
 
-        TextView averageNumberTextView = findViewById(R.id.averageNumberTextView);
         Log.d("EvaluetActivity", "averageNumberTextView initialized");
-
-        TextView textView4 = findViewById(R.id.textView4);
-
-
 
         userId = getIntent().getStringExtra("userId");
 
+        for (int i = 0; i < ratingBars.length; i++) {
+            final int index = i;
+            ratingBars[i].setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+                isRated[index] = true;
+                saveIndividualRating(index, rating);
+            });
+        }
 
+        fetchRatingsAndCalculateAverage();
 
-        RatingBar.OnRatingBarChangeListener listener = new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                // Mark the corresponding RatingBar as rated
-                if (ratingBar.getId() == R.id.ratingBar) {
-                    isRated[0] = true;
-                } else if (ratingBar.getId() == R.id.ratingBar1) {
-                    isRated[1] = true;
-                } else if (ratingBar.getId() == R.id.ratingBar2) {
-                    isRated[2] = true;
-                } else if (ratingBar.getId() == R.id.ratingBar3) {
-                    isRated[3] = true;
-                } else if (ratingBar.getId() == R.id.ratingBar4) {
-                    isRated[4] = true;
+        backButton.setOnClickListener(view -> finish());
+    }
+
+    private void fetchRatingsAndCalculateAverage() {
+        DocumentReference userRef = db.collection("users").document(userId);
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                double total = 0;
+                int count = 0;
+                for (int i = 0; i < ratingBars.length; i++) {
+                    String ratingKey = "rating" + i;
+                    Double rating = documentSnapshot.getDouble(ratingKey);
+                    if (rating != null) {
+                        ratingBars[i].setRating(rating.floatValue());
+                        total += rating;
+                        count++;
+                        isRated[i] = true;
+                    }
                 }
-
-
-
-                if (areAllRated()) {
-                    float averageRating = calculateAverageRating();
-                    showToastWithAverageRating(averageRating);
+                if (count > 0) {
+                    double average = total / count;
+                    displayAverage(average);
                 }
-            }
-        };
-
-        ratingBar.setOnRatingBarChangeListener(listener);
-        ratingBar1.setOnRatingBarChangeListener(listener);
-        ratingBar2.setOnRatingBarChangeListener(listener);
-        ratingBar3.setOnRatingBarChangeListener(listener);
-        ratingBar4.setOnRatingBarChangeListener(listener);
-
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Save average rating to Firebase
-                if (areAllRated()) {
-                    float averageRating = calculateAverageRating();
-                    saveRatingToFirebase(averageRating);
-                    String averageRatingText = "Average Rating: " + averageRating;
-                    averageNumberTextView.setText(averageRatingText);
-                    Log.d("EvaluetActivity", "Average Rating set to TextView: " + averageRatingText);
-                    System.out.println("LINE 98");
-                }
-
-                finish();
             }
         });
+    }
+
+    private void saveIndividualRating(int index, float newRating) {
+        DocumentReference userRef = db.collection("users").document(userId);
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                double total = 0;
+                int count = 0;
+                Map<String, Object> ratingData = new HashMap<>();
+                for (int i = 0; i < ratingBars.length; i++) {
+                    String ratingKey = "rating" + i;
+                    Double existingRating = documentSnapshot.getDouble(ratingKey);
+                    if (existingRating != null) {
+                        if (i == index) {
+                            double averageRating = (existingRating + newRating) / 2;
+                            ratingData.put(ratingKey, averageRating);
+                            total += averageRating;
+                        } else {
+                            ratingData.put(ratingKey, existingRating);
+                            total += existingRating;
+                        }
+                        count++;
+                    } else if (i == index) {
+                        ratingData.put(ratingKey, newRating);
+                        total += newRating;
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    double average = total / count;
+                    ratingData.put("averageRating", average);
+                    userRef.update(ratingData)
+                            .addOnSuccessListener(aVoid -> displayAverage(average))
+                            .addOnFailureListener(e -> Log.e("EvaluetActivity", "Failed to update rating", e));
+                }
+            }
+        }).addOnFailureListener(e -> Log.e("EvaluetActivity", "Failed to fetch existing ratings", e));
+    }
+
+
+
+    private void calculateAndSaveAverage() {
+        DocumentReference userRef = db.collection("users").document(userId);
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                double total = 0;
+                int count = 0;
+                for (int i = 0; i < ratingBars.length; i++) {
+                    String ratingKey = "rating" + i;
+                    Double rating = documentSnapshot.getDouble(ratingKey);
+                    if (rating != null) {
+                        total += ratingBars[i].getRating();
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    double overallAverage = total / count;
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("averageRating", overallAverage);
+                    db.collection("users").document(userId).set(data, SetOptions.merge())
+                            .addOnSuccessListener(aVoid -> displayAverage(overallAverage))
+                            .addOnFailureListener(e -> Log.e("EvaluetActivity", "Failed to save average rating", e));
+                }
+            }
+        });
+    }
+
+
+    private void displayAverage(double average) {
+        TextView averageTextView = findViewById(R.id.averageNumberTextView);
+        averageTextView.setText(String.format(Locale.US, "Average Rating: %.1f", average));
     }
 
     private boolean areAllRated() {
@@ -116,41 +158,5 @@ public class EvaluetActivity extends AppCompatActivity {
             if (!rated) return false;
         }
         return true;
-    }
-
-
-    private float calculateAverageRating() {
-        float totalRatings = ratingBar.getRating() + ratingBar1.getRating() +
-                ratingBar2.getRating() + ratingBar3.getRating() +
-                ratingBar4.getRating();
-
-        return totalRatings / 5;
-    }
-
-    private void showToastWithAverageRating(float averageRating) {
-        Toast.makeText(this, "Average Rating: " + averageRating, Toast.LENGTH_LONG).show();
-    }
-    private void openNewActivityWithRating(float averageRating) {
-        Intent intent = new Intent(EvaluetActivity.this, SearchUserRecyclerAdapter.class);
-        intent.putExtra("average_rating", averageRating);
-        startActivity(intent);
-        finish();
-    }
-
-
-    private void saveRatingToFirebase(float averageRating) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        System.out.println("User ID: " + userId);
-        if (userId != null) {
-            Map<String, Object> ratingData = new HashMap<>();
-            ratingData.put("averageRating", averageRating);
-
-            db.collection("users").document(userId).update("averageRating", averageRating)
-                    .addOnSuccessListener(aVoid -> Toast.makeText(EvaluetActivity.this, "Average Rating saved to Firebase", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(EvaluetActivity.this, "Failed to save Average Rating to Firebase", Toast.LENGTH_SHORT).show());
-        } else {
-            Toast.makeText(EvaluetActivity.this, "Current user ID is null", Toast.LENGTH_SHORT).show();
-        }
     }
 }

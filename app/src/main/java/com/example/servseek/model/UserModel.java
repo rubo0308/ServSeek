@@ -28,9 +28,9 @@ public class UserModel implements Serializable {
     private List<String> portfolio;
 
     private String id;
-    private String email;
 
 
+    private boolean toggleButtonState;
 
 
     public UserModel() {
@@ -42,6 +42,13 @@ public class UserModel implements Serializable {
         this.createdTimestamp = createdTimestamp;
         this.userId = userId;
 
+    }
+    public boolean isToggleButtonState() {
+        return toggleButtonState;
+    }
+
+    public void setToggleButtonState(boolean toggleButtonState) {
+        this.toggleButtonState = toggleButtonState;
     }
 
     public boolean isNotificationEnabled() {

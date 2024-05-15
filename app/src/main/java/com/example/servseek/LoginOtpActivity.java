@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieDrawable;
 import com.example.servseek.utils.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,17 +33,16 @@ import java.util.concurrent.TimeUnit;
 
 public class LoginOtpActivity extends AppCompatActivity {
     String phoneNumber;
-    Long timeoutSeconds  = 60L;
+    Long timeoutSeconds = 60L;
     String verificationCode;
-    PhoneAuthProvider.ForceResendingToken  resendingToken;
+    PhoneAuthProvider.ForceResendingToken resendingToken;
 
     EditText otpInput;
     Button nextBtn;
     ProgressBar progressBar;
     TextView resendOtpTextView;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    LottieAnimationView lottie ;
-
+    LottieAnimationView lottie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,42 +56,26 @@ public class LoginOtpActivity extends AppCompatActivity {
         lottie = findViewById(R.id.lottieAnimationView);
         setupLottieAnimation();
 
-
         phoneNumber = getIntent().getExtras().getString("phone");
         sendOtp(phoneNumber, false);
-        sendOtp(phoneNumber,false);
 
         nextBtn.setOnClickListener(v -> {
-            String enteredOtp  = otpInput.getText().toString();
-            PhoneAuthCredential credential =  PhoneAuthProvider.getCredential(verificationCode,enteredOtp);
+            String enteredOtp = otpInput.getText().toString();
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, enteredOtp);
             signIn(credential);
             setInProgress(true);
         });
-        resendOtpTextView.setOnClickListener((v)->{
-            sendOtp(phoneNumber,true);
-        });
+
+        resendOtpTextView.setOnClickListener(v -> sendOtp(phoneNumber, true));
     }
 
     private void setupLottieAnimation() {
-        lottie.animate().translationX(2000).setDuration(2000).setStartDelay(2900);
-
-        new Handler().postDelayed(() -> {
-            lottie.animate().translationX(0).setDuration(1000).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    lottie.setProgress(0);
-                    lottie.playAnimation();
-                }
-            }).start();
-        }, 500);
+        lottie.setRepeatCount(LottieDrawable.INFINITE);
+        lottie.playAnimation();
     }
 
-    void sendOtp(String phoneNumber,boolean isResend){
+    void sendOtp(String phoneNumber, boolean isResend) {
         startResendTimer();
-
-
-
         setInProgress(true);
         PhoneAuthOptions.Builder builder =
                 PhoneAuthOptions.newBuilder(mAuth)
@@ -109,7 +93,6 @@ public class LoginOtpActivity extends AppCompatActivity {
                             public void onVerificationFailed(@NonNull FirebaseException e) {
                                 AndroidUtil.showToast(getApplicationContext(), "OTP verification failed");
                                 setInProgress(false);
-
                             }
 
                             @Override
@@ -119,51 +102,44 @@ public class LoginOtpActivity extends AppCompatActivity {
                                 resendingToken = forceResendingToken;
                                 AndroidUtil.showToast(getApplicationContext(), "OTP sent successfully");
                                 setInProgress(false);
-
-
                             }
                         });
-        if(isResend){
+        if (isResend) {
             PhoneAuthProvider.verifyPhoneNumber(builder.setForceResendingToken(resendingToken).build());
-        }else {
+        } else {
             PhoneAuthProvider.verifyPhoneNumber(builder.build());
-
         }
     }
 
-
-
-
-    void setInProgress(boolean inProgress){
-        if(inProgress){
+    void setInProgress(boolean inProgress) {
+        if (inProgress) {
             progressBar.setVisibility(View.VISIBLE);
             nextBtn.setVisibility(View.GONE);
-        }else{
+        } else {
             progressBar.setVisibility(View.GONE);
             nextBtn.setVisibility(View.VISIBLE);
         }
     }
-    void signIn(PhoneAuthCredential phoneAuthCredential){
-        //login and go next activity
+
+    void signIn(PhoneAuthCredential phoneAuthCredential) {
+        // Login and go to the next activity
         setInProgress(true);
         mAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-
                 setInProgress(false);
-                if(task.isSuccessful()){
-                    Intent intent = new Intent(LoginOtpActivity.this,LoginUsernameActivity.class);
-                    intent.putExtra("phone",phoneNumber);
+                if (task.isSuccessful()) {
+                    Intent intent = new Intent(LoginOtpActivity.this, LoginUsernameActivity.class);
+                    intent.putExtra("phone", phoneNumber);
                     startActivity(intent);
-                }else{
-                    AndroidUtil.showToast(getApplicationContext(),"OTP verification failed");
+                } else {
+                    AndroidUtil.showToast(getApplicationContext(), "OTP verification failed");
                 }
             }
-
         });
-
     }
-    void startResendTimer(){
+
+    void startResendTimer() {
         resendOtpTextView.setEnabled(false);
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -174,7 +150,7 @@ public class LoginOtpActivity extends AppCompatActivity {
                 // Ensure UI update is done on the UI thread
                 runOnUiThread(() -> {
                     resendOtpTextView.setText("Resend OTP in " + timeoutSeconds + " seconds");
-                    if(timeoutSeconds <= 0){
+                    if (timeoutSeconds <= 0) {
                         timeoutSeconds = 60L; // Reset timeoutSeconds for next use
                         timer.cancel(); // Stop the timer
                         resendOtpTextView.setEnabled(true);
@@ -184,7 +160,4 @@ public class LoginOtpActivity extends AppCompatActivity {
             }
         }, 0, 1000);
     }
-
-
-
 }
