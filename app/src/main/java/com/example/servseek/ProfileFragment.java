@@ -146,7 +146,6 @@ public class ProfileFragment extends Fragment {
 
         updateProfileBtn.setOnClickListener(v -> updateBtnClick());
 
-        // ToggleButton listener to save state in Firebase
         toggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (currentUserModel != null) {
                 currentUserModel.setToggleButtonState(isChecked);
@@ -158,6 +157,7 @@ public class ProfileFragment extends Fragment {
                         });
             }
         });
+
 
         return view;
     }

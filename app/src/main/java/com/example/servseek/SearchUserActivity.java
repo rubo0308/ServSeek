@@ -120,7 +120,9 @@ public class SearchUserActivity extends AppCompatActivity {
         }
 
 
-        query = query.whereGreaterThanOrEqualTo("username", searchTerm)
+        query = query
+                .whereEqualTo("toggleButtonState", false).
+                whereGreaterThanOrEqualTo("username", searchTerm)
                 .whereLessThan("username", searchTerm + '\uf8ff');
 
         FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()

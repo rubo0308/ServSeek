@@ -68,7 +68,7 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
     static class UserModelViewHolder extends RecyclerView.ViewHolder {
         TextView usernameText;
         TextView phoneText;
-        TextView professionText; // Add profession TextView
+        TextView professionText;
         ImageView profilePic;
         TextView ratingText;
 
@@ -76,7 +76,7 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
             super(itemView);
             usernameText = itemView.findViewById(R.id.user_name_text);
             phoneText = itemView.findViewById(R.id.phone_text);
-            professionText = itemView.findViewById(R.id.profesion_text); // Initialize profession TextView
+            professionText = itemView.findViewById(R.id.profesion_text);
             profilePic = itemView.findViewById(R.id.profile_pic_image_view);
             ratingText = itemView.findViewById(R.id.rating_text);
         }
