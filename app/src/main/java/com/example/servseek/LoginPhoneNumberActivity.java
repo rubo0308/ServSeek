@@ -1,4 +1,3 @@
-
 package com.example.servseek;
 
 import androidx.annotation.NonNull;
@@ -22,6 +21,8 @@ import android.widget.ProgressBar;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.hbb20.CountryCodePicker;
 
 import java.io.IOException;
@@ -59,6 +60,12 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginPhoneNumberActivity.this, LoginOtpActivity.class);
             intent.putExtra("phone", countryCodePicker.getFullNumberWithPlus());
             startActivity(intent);
+        });
+
+        // Set listener for country change
+        countryCodePicker.setOnCountryChangeListener(() -> {
+            String countryIsoCode = countryCodePicker.getSelectedCountryNameCode();
+            setPhoneNumberLength(countryIsoCode);
         });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -110,23 +117,9 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
     }
 
     private void setPhoneNumberLength(String countryIsoCode) {
-        int phoneNumberLength;
-        switch (countryIsoCode) {
-            case "AM":
-                phoneNumberLength = 9;
-                break;
-            case "CN":
-                phoneNumberLength = 13;
-                break;
-            case "BR":
-                phoneNumberLength = 11;
-                break;
-            default:
-                phoneNumberLength = 10;
-                break;
-        }
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        Phonenumber.PhoneNumber exampleNumber = phoneUtil.getExampleNumberForType(countryIsoCode, PhoneNumberUtil.PhoneNumberType.MOBILE);
+        int phoneNumberLength = phoneUtil.format(exampleNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL).replaceAll("\\D+", "").length();
         phoneInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(phoneNumberLength)});
-
     }
-
 }

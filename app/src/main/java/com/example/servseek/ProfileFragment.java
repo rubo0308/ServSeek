@@ -49,9 +49,9 @@ public class ProfileFragment extends Fragment {
     private TextView averageNumberTextView;
     UserModel currentUserModel;
     EditText aboutInput;
-    float currentAverageRating = 0;
-    int numberOfRatings = 0;
-    ToggleButton toggleButton;  // Add ToggleButton
+
+
+    ToggleButton toggleButton;
     ActivityResultLauncher<Intent> imagePickLauncher;
     Uri selectedImageUri;
 

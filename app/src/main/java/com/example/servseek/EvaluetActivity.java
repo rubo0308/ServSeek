@@ -1,19 +1,15 @@
 package com.example.servseek;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,7 +25,6 @@ public class EvaluetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_evaluet);
         db = FirebaseFirestore.getInstance();
 
-
         ImageButton backButton = findViewById(R.id.back_btn);
         ratingBars = new RatingBar[]{
                 findViewById(R.id.ratingBar),
@@ -41,7 +36,7 @@ public class EvaluetActivity extends AppCompatActivity {
 
         isRated = new boolean[ratingBars.length];
 
-        Log.d("EvaluetActivity", "averageNumberTextView initialized");
+        Log.d("EvaluateActivity", "averageNumberTextView initialized");
 
         userId = getIntent().getStringExtra("userId");
 
@@ -50,6 +45,7 @@ public class EvaluetActivity extends AppCompatActivity {
             ratingBars[i].setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
                 isRated[index] = true;
                 saveIndividualRating(index, rating);
+                displaySessionAverage();
             });
         }
 
@@ -119,44 +115,24 @@ public class EvaluetActivity extends AppCompatActivity {
         }).addOnFailureListener(e -> Log.e("EvaluetActivity", "Failed to fetch existing ratings", e));
     }
 
-
-
-    private void calculateAndSaveAverage() {
-        DocumentReference userRef = db.collection("users").document(userId);
-        userRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                double total = 0;
-                int count = 0;
-                for (int i = 0; i < ratingBars.length; i++) {
-                    String ratingKey = "rating" + i;
-                    Double rating = documentSnapshot.getDouble(ratingKey);
-                    if (rating != null) {
-                        total += ratingBars[i].getRating();
-                        count++;
-                    }
-                }
-                if (count > 0) {
-                    double overallAverage = total / count;
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("averageRating", overallAverage);
-                    db.collection("users").document(userId).set(data, SetOptions.merge())
-                            .addOnSuccessListener(aVoid -> displayAverage(overallAverage))
-                            .addOnFailureListener(e -> Log.e("EvaluetActivity", "Failed to save average rating", e));
-                }
-            }
-        });
-    }
-
-
     private void displayAverage(double average) {
         TextView averageTextView = findViewById(R.id.averageNumberTextView);
         averageTextView.setText(String.format(Locale.US, "Average Rating: %.1f", average));
     }
 
-    private boolean areAllRated() {
-        for (boolean rated : isRated) {
-            if (!rated) return false;
+    private void displaySessionAverage() {
+        double total = 0;
+        int count = 0;
+        for (int i = 0; i < ratingBars.length; i++) {
+            if (isRated[i]) {
+                total += ratingBars[i].getRating();
+                count++;
+            }
         }
-        return true;
+        if (count > 0) {
+            double average = total / count;
+            TextView averageTextView = findViewById(R.id.sessionAverageNumberTextView);
+            averageTextView.setText(String.format(Locale.US, "Session Average: %.1f", average));
+        }
     }
 }

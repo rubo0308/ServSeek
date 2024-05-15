@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".YourActivityName">
+        tools:context=".EvaluetActivity">
 
         <RelativeLayout
             android:id="@+id/toolbar"
@@ -26,11 +26,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="90dp"
-                android:text="Evaluet"
+                android:text="Evaluate"
                 android:textColor="@color/white"
                 android:textSize="28sp"
                 android:textStyle="bold"
-                android:layout_toEndOf="@+id/back_btn"/>
+                android:layout_toEndOf="@+id/back_btn" />
 
             <ImageButton
                 android:id="@+id/back_btn"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Quality"
-            android:textSize="28dp"
+            android:textSize="28sp"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -68,11 +68,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Money"
-            android:textSize="28dp"
+            android:textSize="28sp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
 
         <RatingBar
             android:id="@+id/ratingBar1"
@@ -81,17 +80,17 @@
             app:layout_constraintTop_toBottomOf="@id/textview1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
         <TextView
             android:id="@+id/textview2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Time"
-            android:textSize="28dp"
+            android:textSize="28sp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
 
         <RatingBar
             android:id="@+id/ratingBar2"
@@ -102,13 +101,12 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-            android:id="@+id/TextView3"
+            android:id="@+id/textview3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Communication"
-            android:textSize="28dp"
-
+            android:textSize="28sp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -117,42 +115,50 @@
             android:id="@+id/ratingBar3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/TextView3"
+            app:layout_constraintTop_toBottomOf="@id/textview3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/textview4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Attitude to work"
-            android:textSize="28dp"
+            android:textSize="28sp"
             app:layout_constraintTop_toBottomOf="@id/ratingBar3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
 
         <RatingBar
             android:id="@+id/ratingBar4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toBottomOf="@id/textview4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/averageNumberTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
             android:text="Average Rating: "
             android:textAppearance="?android:textAppearanceMedium"
-            app:layout_constraintTop_toBottomOf="@id/ratingBar4"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/ratingBar4" />
+
+        <TextView
+            android:id="@+id/sessionAverageNumberTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Session Average: "
+            android:textAppearance="?android:textAppearanceMedium"
+            app:layout_constraintTop_toBottomOf="@id/averageNumberTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
