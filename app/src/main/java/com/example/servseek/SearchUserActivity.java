@@ -8,14 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
-import android.widget.TextView;
-
 import com.example.servseek.adapter.SearchUserRecyclerAdapter;
 import com.example.servseek.utils.FirebaseUtil;
 import com.example.servseek.model.UserModel;
@@ -27,7 +24,7 @@ public class SearchUserActivity extends AppCompatActivity {
     ImageButton searchButton, filterButton, backButton;
     RecyclerView recyclerView;
     SearchUserRecyclerAdapter adapter;
-    private String currentFilter = "All"; // Default filter
+    private String currentFilter = "All";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +78,7 @@ public class SearchUserActivity extends AppCompatActivity {
     private void setupFilterButton() {
         filterButton.setOnClickListener(view -> {
             PopupMenu popup = new PopupMenu(SearchUserActivity.this, view);
-            popup.inflate(R.menu.filter_options_menu); // Ensure this menu exists in your res/menu directory
+            popup.inflate(R.menu.filter_options_menu);
             popup.setOnMenuItemClickListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.filter_all) {
@@ -99,7 +96,6 @@ public class SearchUserActivity extends AppCompatActivity {
         });
     }
 
-
     private void performSearch() {
         String searchTerm = searchInput.getText().toString();
         if (searchTerm.isEmpty()) {
@@ -112,17 +108,15 @@ public class SearchUserActivity extends AppCompatActivity {
     void setupSearchRecyclerView(String searchTerm) {
         Query query = FirebaseUtil.allUserCollectionReference();
 
-
         if ("4Stars".equals(currentFilter)) {
             query = query.whereGreaterThanOrEqualTo("averageRating", 4.0);
         } else if ("4.5Stars".equals(currentFilter)) {
             query = query.whereGreaterThanOrEqualTo("averageRating", 4.5);
         }
 
-
         query = query
-                .whereEqualTo("toggleButtonState", false).
-                whereGreaterThanOrEqualTo("username", searchTerm)
+                .whereEqualTo("toggleButtonState", false)
+                .whereGreaterThanOrEqualTo("username", searchTerm)
                 .whereLessThan("username", searchTerm + '\uf8ff');
 
         FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
@@ -137,7 +131,6 @@ public class SearchUserActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
-
 
     @Override
     protected void onStart() {

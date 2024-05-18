@@ -3,6 +3,7 @@ package com.example.servseek.model;
 import com.google.firebase.Timestamp;
 
 public class ChatMessageModel {
+    private String id;
     private String message;
     private String senderId;
     private Timestamp timestamp;
@@ -10,10 +11,19 @@ public class ChatMessageModel {
     public ChatMessageModel() {
     }
 
-    public ChatMessageModel(String message, String senderId, Timestamp timestamp) {
+    public ChatMessageModel(String id, String message, String senderId, Timestamp timestamp) {
+        this.id = id;
         this.message = message;
         this.senderId = senderId;
         this.timestamp = timestamp;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getMessage() {
@@ -40,4 +50,3 @@ public class ChatMessageModel {
         this.timestamp = timestamp;
     }
 }
-

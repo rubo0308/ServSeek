@@ -147,14 +147,14 @@ public class LoginOtpActivity extends AppCompatActivity {
             @Override
             public void run() {
                 timeoutSeconds--;
-                // Ensure UI update is done on the UI thread
+
                 runOnUiThread(() -> {
                     resendOtpTextView.setText("Resend OTP in " + timeoutSeconds + " seconds");
                     if (timeoutSeconds <= 0) {
-                        timeoutSeconds = 60L; // Reset timeoutSeconds for next use
-                        timer.cancel(); // Stop the timer
+                        timeoutSeconds = 60L;
+                        timer.cancel();
                         resendOtpTextView.setEnabled(true);
-                        resendOtpTextView.setText("Resend OTP"); // Reset text
+                        resendOtpTextView.setText("Resend OTP");
                     }
                 });
             }

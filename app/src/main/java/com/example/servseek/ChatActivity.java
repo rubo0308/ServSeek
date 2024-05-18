@@ -1,23 +1,24 @@
 package com.example.servseek;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.servseek.adapter.ChatRecyclerAdapter;
 import com.example.servseek.model.ChatMessageModel;
 import com.example.servseek.model.ChatroomModel;
-import com.example.servseek.utils.AndroidUtil;
 import com.example.servseek.model.UserModel;
+import com.example.servseek.utils.AndroidUtil;
 import com.example.servseek.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,12 +41,11 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapter.OnMessageClickListener {
     UserModel otherUser;
     String chatroomId;
     ChatroomModel chatroomModel;
     ChatRecyclerAdapter adapter;
-
 
     EditText messageInput;
     ImageButton sendMessageBtn;
@@ -70,7 +70,6 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.chat_recycler_view);
         imagebutton = findViewById(R.id.profile_pic_layout);
 
-
         imagebutton.setOnClickListener(v -> {
             Intent intent = new Intent(ChatActivity.this, OtherUserActivity.class);
             intent.putExtra("userId", otherUser.getUserId());
@@ -82,6 +81,7 @@ public class ChatActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, new HomeFragment()).commit();
         });
+
         otherUsername.setText(getIntent().getStringExtra("username"));
 
         sendMessageBtn.setOnClickListener((v -> {
@@ -91,11 +91,8 @@ public class ChatActivity extends AppCompatActivity {
             sendMessageToUser(message);
         }));
 
-
         getOrCreateChatroomModel();
         setupChatRecyclerView();
-
-
     }
 
     void setupChatRecyclerView() {
@@ -105,7 +102,7 @@ public class ChatActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<ChatMessageModel> options = new FirestoreRecyclerOptions.Builder<ChatMessageModel>()
                 .setQuery(query, ChatMessageModel.class).build();
 
-        adapter = new ChatRecyclerAdapter(options, getApplicationContext());
+        adapter = new ChatRecyclerAdapter(options, getApplicationContext(), this);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         recyclerView.setLayoutManager(manager);
@@ -118,9 +115,7 @@ public class ChatActivity extends AppCompatActivity {
                 recyclerView.smoothScrollToPosition(0);
             }
         });
-
     }
-
 
     void sendMessageToUser(String message) {
         chatroomModel.setLastMessageTimestamp(Timestamp.now());
@@ -128,29 +123,27 @@ public class ChatActivity extends AppCompatActivity {
         chatroomModel.setLastMessage(message);
         FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
 
-        ChatMessageModel chatMessageModel = new ChatMessageModel(message, FirebaseUtil.currentUserId(), Timestamp.now());
-        FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        // Generate a unique ID for the new message
+        String messageId = FirebaseUtil.getChatroomMessageReference(chatroomId).document().getId();
+
+        ChatMessageModel chatMessageModel = new ChatMessageModel(messageId, message, FirebaseUtil.currentUserId(), Timestamp.now());
+        FirebaseUtil.getChatroomMessageReference(chatroomId).document(messageId).set(chatMessageModel)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             messageInput.setText("");
                             sendNotification(message);
-
                         }
                     }
-
                 });
-
     }
-
 
     void getOrCreateChatroomModel() {
         FirebaseUtil.getChatroomReference(chatroomId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 chatroomModel = task.getResult().toObject(ChatroomModel.class);
                 if (chatroomModel == null) {
-                    //first time chat
                     chatroomModel = new ChatroomModel(
                             chatroomId,
                             Arrays.asList(FirebaseUtil.currentUserId(), otherUser.getUserId()),
@@ -225,5 +218,56 @@ public class ChatActivity extends AppCompatActivity {
                 response.close();
             }
         });
+    }
+
+
+    @Override
+    public void onEditMessage(ChatMessageModel message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_edit_message, null);
+        builder.setView(dialogView);
+
+        EditText editText = dialogView.findViewById(R.id.edit_message_text);
+        editText.setText(message.getMessage());
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String newText = editText.getText().toString().trim();
+            if (!newText.isEmpty()) {
+                updateMessage(message.getId(), newText);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    @Override
+    public void onDeleteMessage(ChatMessageModel message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Message")
+                .setMessage("Are you sure you want to delete this message?")
+                .setPositiveButton("Delete", (dialog, which) -> deleteMessage(message.getId()))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void updateMessage(String messageId, String newText) {
+        if (messageId == null) {
+            Log.e("ChatActivity", "updateMessage: messageId is null");
+            return;
+        }
+        FirebaseUtil.getChatroomMessageReference(chatroomId)
+                .document(messageId)
+                .update("message", newText);
+    }
+
+    private void deleteMessage(String messageId) {
+        if (messageId == null) {
+            Log.e("ChatActivity", "deleteMessage: messageId is null");
+            return;
+        }
+        FirebaseUtil.getChatroomMessageReference(chatroomId)
+                .document(messageId)
+                .delete();
     }
 }

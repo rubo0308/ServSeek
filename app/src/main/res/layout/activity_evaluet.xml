@@ -40,7 +40,6 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/icon_back"
                 app:tint="@color/white" />
-
         </RelativeLayout>
 
         <TextView
@@ -142,23 +141,34 @@
             android:id="@+id/averageNumberTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="16dp"
             android:text="Average Rating: "
             android:textAppearance="?android:textAppearanceMedium"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.482"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ratingBar4" />
+            app:layout_constraintTop_toBottomOf="@+id/submitRatingButton" />
 
         <TextView
             android:id="@+id/sessionAverageNumberTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="Session Average: "
             android:textAppearance="?android:textAppearanceMedium"
-            app:layout_constraintTop_toBottomOf="@id/averageNumberTextView"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp" />
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/averageNumberTextView" />
 
+        <Button
+            android:id="@+id/submitRatingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit Rating"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar4" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

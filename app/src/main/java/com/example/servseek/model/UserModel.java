@@ -143,7 +143,7 @@ public class UserModel implements Serializable {
     }
 
 
-    // Getters and Setters
+
     public String getId() {
         return id;
     }

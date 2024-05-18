@@ -113,16 +113,13 @@ public class OtherUserActivity extends AppCompatActivity {
                 if (otherUserModel != null) {
                     updateUIWithUserData(otherUserModel);
 
-                    // Fetch the profile picture from Firebase Storage
                     FirebaseUtil.getOtherProfilePicStorageRef(userId).getDownloadUrl().addOnSuccessListener(uri -> {
-                        // Load the image into the ImageView using Glide
                         Glide.with(OtherUserActivity.this).load(uri).into(profilePic);
                     }).addOnFailureListener(e -> {
-                        // Handle any errors
                     });
                 }
             } else {
-                // Handle the error
+
             }
         });
     }
@@ -151,7 +148,7 @@ public class OtherUserActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == EVALUATE_USER_REQUEST && resultCode == RESULT_OK && data != null) {
-            // Code to handle the activity result
+
         }
     }
 }

@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void animateText() {
         index = 0;
-        animatedTextView.setText(""); // Clear text view
+        animatedTextView.setText("");
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
@@ -45,7 +45,6 @@ public class SplashActivity extends AppCompatActivity {
 
     private void handleIntent() {
         if (getIntent().getExtras() != null) {
-            // from notification
             String userId = getIntent().getExtras().getString("userId");
             System.out.println(userId);
             FirebaseUtil.allUserCollectionReference().document(userId).get()

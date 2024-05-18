@@ -41,16 +41,15 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String imageUrl = imageUrls.get(position);
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            // Load image using your preferred image loading library (e.g., Glide, Picasso)
-            // Example using Glide:
+
             Glide.with(holder.imageView.getContext())
                     .load(imageUrl)
-                    .placeholder(R.drawable.baseline_add_24) // Placeholder image while loading
+                    .placeholder(R.drawable.baseline_add_24)
                     .into(holder.imageView);
         } else {
-            holder.imageView.setImageResource(R.drawable.baseline_add_24); // Set a placeholder image
+            holder.imageView.setImageResource(R.drawable.baseline_add_24);
         }
-        holder.imageView.setOnClickListener(v -> onImageClick.accept(position)); // Handle image click
+        holder.imageView.setOnClickListener(v -> onImageClick.accept(position));
     }
 
     @Override

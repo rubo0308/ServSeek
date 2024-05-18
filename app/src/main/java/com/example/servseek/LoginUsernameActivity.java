@@ -65,7 +65,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
             userModel.setUsername(username);
             userModel.setProfession(profession);
         } else {
-            // If userModel is null, create a new one
+
             userModel = new UserModel(phoneNumber, username, Timestamp.now(), FirebaseUtil.currentUserId());
             userModel.setProfession(profession);
         }
@@ -78,8 +78,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } else {
-                    // Handle the error
-                    // For example, show a Toast or update the UI
+
                 }
             }
         });
