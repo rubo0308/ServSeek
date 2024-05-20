@@ -8,7 +8,6 @@ android {
     namespace = "com.example.servseek"
     compileSdk = 34
 
-
     defaultConfig {
         applicationId = "com.example.servseek"
         minSdk = 28

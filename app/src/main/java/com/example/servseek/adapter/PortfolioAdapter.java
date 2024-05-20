@@ -79,7 +79,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioAdapter.View
 
     private void addPlaceholder() {
         if (imageUrls.isEmpty() || (imageUrls.get(imageUrls.size() - 1) != null && imageUrls.size() < MAX_ITEMS)) {
-            imageUrls.add(null); // Add a null as a placeholder for the add icon
+            imageUrls.add(null);
             notifyItemInserted(imageUrls.size() - 1);
         }
     }

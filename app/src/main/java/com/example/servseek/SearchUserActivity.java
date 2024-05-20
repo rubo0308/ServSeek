@@ -8,18 +8,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
+import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+
 import com.example.servseek.adapter.SearchUserRecyclerAdapter;
-import com.example.servseek.utils.FirebaseUtil;
 import com.example.servseek.model.UserModel;
+import com.example.servseek.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
 public class SearchUserActivity extends AppCompatActivity {
+    private static final String TAG = "SearchUserActivity";
+
     EditText searchInput;
     ImageButton searchButton, filterButton, backButton;
     RecyclerView recyclerView;
@@ -118,6 +121,8 @@ public class SearchUserActivity extends AppCompatActivity {
                 .whereEqualTo("toggleButtonState", false)
                 .whereGreaterThanOrEqualTo("username", searchTerm)
                 .whereLessThan("username", searchTerm + '\uf8ff');
+
+        Log.d(TAG, "Query: " + query.toString());
 
         FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
                 .setQuery(query, UserModel.class).build();

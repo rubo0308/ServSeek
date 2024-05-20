@@ -15,26 +15,35 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.servseek.adapter.PortfolioAdapter;
+import com.example.servseek.model.Rating;
 import com.example.servseek.model.UserModel;
 import com.example.servseek.utils.AndroidUtil;
 import com.example.servseek.utils.FirebaseUtil;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class OtherUserActivity extends AppCompatActivity {
+    private static final int EVALUATE_USER_REQUEST = 1;
     ImageView profilePic;
     UserModel otherUser;
     String chatroomId;
-    TextView usernameTextView, professionTextView, phoneTextView, aboutTextView, averageRatingTextView;
+    TextView usernameTextView;
+    TextView professionTextView;
+    TextView phoneTextView;
+    TextView aboutTextView;
+    TextView averageRatingTextView;
     ProgressBar progressBar;
     RecyclerView portfolioRecyclerView;
     UserModel otherUserModel;
     private PortfolioAdapter adapter;
     ImageButton imagebutton;
-
-    private static final int EVALUATE_USER_REQUEST = 1;
     private String userId;
+    private List<Float> averageRatingsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,8 @@ public class OtherUserActivity extends AppCompatActivity {
 
         initializeViews();
         handleIntentExtras();
+        averageRatingsList = new ArrayList<>();
+        fetchAndDisplayRatings();
     }
 
     private void initializeViews() {
@@ -64,11 +75,10 @@ public class OtherUserActivity extends AppCompatActivity {
 
         Button evaluateButton = findViewById(R.id.evaluateButton);
         evaluateButton.setOnClickListener(v -> {
-            if (userId != null && !userId.isEmpty()) {
+            if (otherUser.getUserId() != null && !otherUser.getUserId().isEmpty()) {
                 Intent intent = new Intent(OtherUserActivity.this, EvaluetActivity.class);
                 intent.putExtra("userId", otherUser.getUserId());
-
-                startActivity(intent);
+                startActivityForResult(intent, EVALUATE_USER_REQUEST);
             }
         });
 
@@ -115,13 +125,31 @@ public class OtherUserActivity extends AppCompatActivity {
 
                     FirebaseUtil.getOtherProfilePicStorageRef(userId).getDownloadUrl().addOnSuccessListener(uri -> {
                         Glide.with(OtherUserActivity.this).load(uri).into(profilePic);
-                    }).addOnFailureListener(e -> {
-                    });
+                    }).addOnFailureListener(e -> {});
                 }
             } else {
-
+                // Handle error
             }
         });
+    }
+
+    private void fetchAndDisplayRatings() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("ratings").get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                Rating rating = document.toObject(Rating.class);
+                                if (rating != null) {
+                                    averageRatingsList.add(rating.getRating());
+                                }
+                            }
+                            calculateAndDisplayOverallAverage();
+                        }
+                    }
+                });
     }
 
     private void updateUIWithUserData(UserModel user) {
@@ -129,7 +157,6 @@ public class OtherUserActivity extends AppCompatActivity {
         phoneTextView.setText(user.getPhone());
         professionTextView.setText(user.getProfession());
         aboutTextView.setText(user.getAbout());
-        averageRatingTextView.setText(formatAverageRating(user.getAverageRating()));
 
         if (profilePic.getDrawable() == null && user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
             Glide.with(this).load(user.getImageUrl()).into(profilePic);
@@ -148,7 +175,31 @@ public class OtherUserActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == EVALUATE_USER_REQUEST && resultCode == RESULT_OK && data != null) {
-
+            float newAverageRating = data.getFloatExtra("averageRating", 0);
+            averageRatingsList.add(newAverageRating);
+            calculateAndDisplayOverallAverage();
         }
+    }
+
+    private void calculateAndDisplayOverallAverage() {
+        if (averageRatingsList.isEmpty()) return;
+
+        float total = 0;
+        for (float rating : averageRatingsList) {
+            total += rating;
+        }
+
+        float overallAverage = total / averageRatingsList.size();
+        saveOverallAverageToFirestore(overallAverage);
+        displayOverallAverage(overallAverage);
+    }
+
+    private void saveOverallAverageToFirestore(float overallAverage) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).update("averageRating", overallAverage);
+    }
+
+    private void displayOverallAverage(float overallAverage) {
+        averageRatingTextView.setText(String.format(Locale.US, "Average Rating: %.1f", overallAverage));
     }
 }

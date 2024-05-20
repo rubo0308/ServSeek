@@ -138,28 +138,17 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-            android:id="@+id/averageNumberTextView"
+            android:id="@+id/sessionAverageNumberTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Average Rating: "
+            android:text="Session Average: "
             android:textAppearance="?android:textAppearanceMedium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.482"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/submitRatingButton" />
 
-        <TextView
-            android:id="@+id/sessionAverageNumberTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Session Average: "
-            android:textAppearance="?android:textAppearanceMedium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.492"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/averageNumberTextView" />
 
         <Button
             android:id="@+id/submitRatingButton"

@@ -2,4 +2,5 @@
 <resources>
     <item name="messageInput" type="id" />
     <item name="sendButton" type="id" />
+    <item name="imageViewPortfolioItem" type="id" />
 </resources>
