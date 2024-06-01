@@ -27,7 +27,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
     ProgressBar progressBar;
     String phoneNumber;
     UserModel userModel;
-   EditText professionInput;
+    EditText professionInput;
 
 
 
@@ -95,7 +95,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 setInProgress(false);
                 if(task.isSuccessful()){
-                 userModel =    task.getResult().toObject(UserModel.class);
+                    userModel =    task.getResult().toObject(UserModel.class);
                     if(userModel!=null){
                         usernameInput.setText(userModel.getUsername());
                         professionInput.setText(userModel.getProfession());

@@ -7,9 +7,10 @@ import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.content.Intent;
 import android.widget.TextView;
+
+import com.example.servseek.utils.FirebaseUtil;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.example.servseek.model.Rating;
 
 import java.util.Locale;
@@ -22,6 +23,7 @@ public class EvaluetActivity extends AppCompatActivity {
     private RatingBar ratingBar4;
     private TextView sessionAverageTextView;
     private String userId;
+    private String currentUserId;
     private float sessionAverageRating;
 
     @Override
@@ -39,9 +41,32 @@ public class EvaluetActivity extends AppCompatActivity {
         sessionAverageTextView = findViewById(R.id.sessionAverageNumberTextView);
 
         userId = getIntent().getStringExtra("userId");
+        currentUserId = FirebaseUtil.currentUserId();
 
         backButton.setOnClickListener(view -> finish());
-        submitButton.setOnClickListener(view -> submitRating());
+        submitButton.setOnClickListener(view -> checkAndSubmitRating());
+    }
+
+    private void checkAndSubmitRating() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("ratings")
+                .whereEqualTo("userId", currentUserId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            // User has already rated
+                            sessionAverageTextView.setText("You have already rated this user.");
+                        } else {
+                            // User has not rated yet, proceed to submit the rating
+                            submitRating();
+                        }
+                    } else {
+                        // Handle error
+                        sessionAverageTextView.setText("Error checking rating. Please try again.");
+                    }
+                });
     }
 
     private void submitRating() {
@@ -64,6 +89,13 @@ public class EvaluetActivity extends AppCompatActivity {
 
     private void saveRatingToFirestore(float averageRating) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(userId).collection("ratings").add(new Rating(averageRating));
+        Rating rating = new Rating(averageRating, currentUserId);
+        db.collection("users").document(userId).collection("ratings").add(rating)
+                .addOnSuccessListener(documentReference -> {
+                    // Handle success
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                });
     }
 }

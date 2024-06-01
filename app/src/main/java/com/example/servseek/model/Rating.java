@@ -2,13 +2,15 @@ package com.example.servseek.model;
 
 public class Rating {
     private float rating;
+    private String userId;
 
     public Rating() {
-        // Empty constructor needed for Firestore
+        // No-arg constructor for Firestore
     }
 
-    public Rating(float rating) {
+    public Rating(float rating, String userId) {
         this.rating = rating;
+        this.userId = userId;
     }
 
     public float getRating() {
@@ -17,5 +19,13 @@ public class Rating {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

@@ -28,6 +28,7 @@ public class SearchUserActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     SearchUserRecyclerAdapter adapter;
     private String currentFilter = "All";
+    private boolean showOnlyCurrentUser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,17 @@ public class SearchUserActivity extends AppCompatActivity {
         setupSearchInput();
         setupFilterButton();
         setupBackButton();
+
+
+        showOnlyCurrentUser = checkIfShowOnlyCurrentUser();
+
+
+        setupSearchRecyclerView("");
+    }
+
+    private boolean checkIfShowOnlyCurrentUser() {
+
+        return false;
     }
 
     private void setupSearchInput() {
@@ -55,8 +67,7 @@ public class SearchUserActivity extends AppCompatActivity {
 
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -64,8 +75,7 @@ public class SearchUserActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         searchButton.setOnClickListener(v -> performSearch());
@@ -91,7 +101,6 @@ public class SearchUserActivity extends AppCompatActivity {
                 } else if (itemId == R.id.filter_four_point_five_stars) {
                     currentFilter = "4.5Stars";
                 }
-
                 performSearch();
                 return true;
             });
@@ -111,16 +120,24 @@ public class SearchUserActivity extends AppCompatActivity {
     void setupSearchRecyclerView(String searchTerm) {
         Query query = FirebaseUtil.allUserCollectionReference();
 
-        if ("4Stars".equals(currentFilter)) {
-            query = query.whereGreaterThanOrEqualTo("averageRating", 4.0);
-        } else if ("4.5Stars".equals(currentFilter)) {
-            query = query.whereGreaterThanOrEqualTo("averageRating", 4.5);
-        }
+        if (showOnlyCurrentUser) {
 
-        query = query
-                .whereEqualTo("toggleButtonState", false)
-                .whereGreaterThanOrEqualTo("username", searchTerm)
-                .whereLessThan("username", searchTerm + '\uf8ff');
+            String currentUsername = "currentUsername";
+            query = query.whereEqualTo("username", currentUsername);
+        } else {
+            if ("4Stars".equals(currentFilter)) {
+                query = query.whereGreaterThanOrEqualTo("averageRating", 4.0);
+            } else if ("4.5Stars".equals(currentFilter)) {
+                query = query.whereGreaterThanOrEqualTo("averageRating", 4.5);
+            }
+            query = query.whereEqualTo("toggleButtonState", false);
+
+            if (!searchTerm.isEmpty()) {
+                query = query
+                        .whereGreaterThanOrEqualTo("username", searchTerm)
+                        .whereLessThan("username", searchTerm + '\uf8ff');
+            }
+        }
 
         Log.d(TAG, "Query: " + query.toString());
 
@@ -140,21 +157,24 @@ public class SearchUserActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (adapter != null)
+        if (adapter != null) {
             adapter.startListening();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (adapter != null)
+        if (adapter != null) {
             adapter.stopListening();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (adapter != null)
+        if (adapter != null) {
             adapter.startListening();
+        }
     }
 }
